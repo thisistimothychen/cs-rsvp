@@ -1,0 +1,6 @@
+# IntelliJ stuff
+.idea/
+.idea_modules/
+
+# nodejs modules
+node_modules/
