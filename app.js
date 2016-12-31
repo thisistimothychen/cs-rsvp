@@ -34,6 +34,7 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
+const cas_loginController = require('./controllers/cas_login');
 
 /**
  * API keys and Passport configuration.
@@ -44,28 +45,6 @@ const passportConfig = require('./config/passport');
  * Create Express server.
  */
 const app = express();
-
-var CAS = require('cas');
-var cas = new CAS({
-    base_url: 'https://login.umd.edu/cas',
-    service: 'my_service',
-    version: 3.0
-});
-
-var cas_login = function(req, res) {
-    cas.authenticate(req, res, function(err, status, username, extended) {
-        if (err) {
-            // Handle the error
-            res.send({error: err});
-        } else {
-            // Log the user in
-            res.send({status: status, username: username, attributes: extended.attributes});
-        }
-    });
-}
-
-app.get('/ggwp', cas_login);
-
 
 /**
  * Connect to MongoDB.
@@ -154,6 +133,8 @@ app.post('/account/profile', passportConfig.isAuthenticated, userController.post
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
+
+app.get('/cas_login', cas_loginController.cas_login);
 
 /**
  * API examples routes.
