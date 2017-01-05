@@ -39,7 +39,7 @@ let EventSchema = new GetterSchema({
 	},
 	// major restrictions
 	major: [{
-		type: String
+		type: String,
 		trim: true
 	}],
 	// minimum class standing (e.g. Freshman, Sophomore, etc.)
