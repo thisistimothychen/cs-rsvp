@@ -73,6 +73,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 app.use(session({
+  cookieName: 'session',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+  httpOnly: true,   // Prevents browser JavaScript from accessing cookies
+  secure: true,     // Ensures cookies are only used over HTTPS
+  ephemeral: true,  // Deletes the cookie when the browser is closed
   resave: true,
   saveUninitialized: true,
   secret: process.env.SESSION_SECRET,
@@ -116,10 +122,10 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 /**
  * Primary app routes.
  */
-app.get('/', homeController.index);
-app.get('/login', userController.getLogin);
-app.post('/login', userController.postLogin);
-app.get('/logout', userController.logout);
+// app.get('/', homeController.index);
+// app.get('/login', userController.getLogin);
+// app.post('/login', userController.postLogin);
+// app.get('/logout', userController.logout);
 app.get('/forgot', userController.getForgot);
 app.post('/forgot', userController.postForgot);
 app.get('/reset/:token', userController.getReset);
@@ -134,7 +140,43 @@ app.post('/account/password', passportConfig.isAuthenticated, userController.pos
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
+
+
+// Initialize database paths
+let User = require(path.resolve('./models/User'));
+
 app.get('/cas_login', cas_loginController.cas_login);
+app.get('/logout', cas_loginController.cas_logout);
+// use res.render to load up an ejs view file
+
+// index page 
+app.get('/', function(req, res) {
+	res.render('index');
+});
+
+// about page 
+app.get('/about', function(req, res) {
+	res.render('about');
+});
+
+// edit profile page
+app.get('/profile', function(req, res) {
+  if (req.session && req.session.cas_username) {  // Check if session exists
+    // Lookup the user in the DB based on CAS username
+    User.findOne({username: req.session.cas_username}, function(err, user) {
+      if (!user) {  // First time login; CREATE NEW USER
+        res.render('profile.ejs', {username: req.session.cas_username});
+      } else {      // User has been created already; UPDATE EXISTING USER
+        res.render('profile.ejs', {username: req.session.cas_username});
+      }
+    });
+  } else {
+    res.redirect('/cas_login');
+  }
+});
+
+
+
 
 /**
  * API examples routes.
