@@ -1,13 +1,13 @@
 'use strict';
 
-let	path = require('path'),
+let path = require('path'),
 	q = require('q'),
 
-	usersService = require(path.resolve('../services/users.profile.server.service.js'))();
-	User = require(path.resolve('../models/User'));
+	eventsService = require(path.resolve('../services/events.server.service.js'))();
+	Event = require(path.resolve('../models/Event'));
 
 module.exports.create = function(req, res) {
-	usersService.createUser(req.body)
+	eventsService.createEvent(req.body)
 		.then(function(result) {
 			res.status(200).json(result);
 		}, function(err) {
@@ -16,7 +16,7 @@ module.exports.create = function(req, res) {
 };
 
 module.exports.update = function(req, res) {
-	usersService.updateUser(req.body.oldUser, req.body.newUser)
+	eventsService.updateEvent(req.body.oldEvent, req.body.newEvent)
 		.then(function(result) {
 			res.status(200).json(result);
 		}, function(err) {
@@ -25,7 +25,7 @@ module.exports.update = function(req, res) {
 };
 
 module.exports.search = function(req, res) {
-	usersService.searchUsers(req.query)
+	eventsService.searchEvents(req.query)
 		.then(function(result) {
 			res.status(200).json(result);
 		}, function(err) {
