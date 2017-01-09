@@ -164,7 +164,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
     res.render(pageToRender);
   } else {
     // Need to check permissions
-    
+
     // Check if session exists
     if (req.session && req.session.cas_username) {
       // Lookup the user in the DB based on CAS username
@@ -184,7 +184,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
           }
           
           // No permission to view pageToRender
-          // TODO create "Sorry, cannot access that page" view
+          req.flash('danger', 'Sorry, you have insufficient user privileges to access the ' + pageToRender.substring(0, pageToRender.length - 4) + ' page.');
           res.redirect('/');
         }
       });
@@ -198,11 +198,6 @@ let checkPermissions = function(req, res, pageToRender, roles) {
 // index page 
 app.get('/', function(req, res) {
   checkPermissions(req, res, 'index.ejs', []);
-});
-
-// about page 
-app.get('/about', function(req, res) {
-  checkPermissions(req, res, 'about.ejs', []);
 });
 
 // edit profile page
