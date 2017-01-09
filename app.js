@@ -149,30 +149,78 @@ app.get('/cas_login', cas_loginController.cas_login);
 app.get('/logout', cas_loginController.cas_logout);
 // use res.render to load up an ejs view file
 
+/**
+ * Call to check authentication and permissions/user roles
+ *
+ * @param {String} pageToRender
+ *      The route to render to. E.g. 'profile.ejs'
+ * @param {Array} roles
+ *      Empty array for universally accessible page
+ *      String array for roles allowed to access the pageToRender
+ */
+let checkPermissions = function(req, res, pageToRender, roles) {
+  if (roles.length == 0) {
+    // Universally accessible page; don't need permissions
+    res.render(pageToRender);
+  } else {
+    // Need to check permissions
+    
+    // Check if session exists
+    if (req.session && req.session.cas_username) {
+      // Lookup the user in the DB based on CAS username
+      User.findOne({username: req.session.cas_username}, function(err, user) {
+        if (!user) {
+          // First time login; CREATE NEW USER AT PROFILE PAGE
+          res.render('profile.ejs', {username: req.session.cas_username});
+        } else {
+          // User has been created already; check permissions
+          for (var i = 0; i < roles.length; i++) {
+            // TODO check database text-search index compatibility
+            if (roles[i] == "User" && user.roles.type.user ||
+                roles[i] == "Admin" && user.roles.type.admin ||
+                roles[i] == "Superuser" && user.roles.type.superuser) {
+              res.render(pageToRender, {user: user});
+            }
+          }
+          
+          // No permission to view pageToRender
+          // TODO create "Sorry, cannot access that page" view
+          res.redirect('/');
+        }
+      });
+    } else {
+      res.redirect('/cas_login');
+    }
+  }
+}
+
+
 // index page 
 app.get('/', function(req, res) {
-	res.render('index');
+  checkPermissions(req, res, 'index.ejs', []);
 });
 
 // about page 
 app.get('/about', function(req, res) {
-	res.render('about');
+  checkPermissions(req, res, 'about.ejs', []);
 });
 
 // edit profile page
 app.get('/profile', function(req, res) {
-  if (req.session && req.session.cas_username) {  // Check if session exists
-    // Lookup the user in the DB based on CAS username
-    User.findOne({username: req.session.cas_username}, function(err, user) {
-      if (!user) {  // First time login; CREATE NEW USER
-        res.render('profile.ejs', {username: req.session.cas_username});
-      } else {      // User has been created already; UPDATE EXISTING USER
-        res.render('profile.ejs', {username: req.session.cas_username});
-      }
-    });
-  } else {
-    res.redirect('/cas_login');
-  }
+  checkPermissions(req, res, 'profile.ejs', ['User']);
+  
+  // if (req.session && req.session.cas_username) {  // Check if session exists
+  //   // Lookup the user in the DB based on CAS username
+  //   User.findOne({username: req.session.cas_username}, function(err, user) {
+  //     if (!user) {  // First time login; CREATE NEW USER
+  //       res.render('profile.ejs', {username: req.session.cas_username});
+  //     } else {      // User has been created already; UPDATE EXISTING USER
+  //       res.render('profile.ejs', {user: user});
+  //     }
+  //   });
+  // } else {
+  //   res.redirect('/cas_login');
+  // }
 });
 
 
