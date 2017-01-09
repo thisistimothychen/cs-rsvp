@@ -39,16 +39,16 @@ const util = require(path.resolve('./services/util.server.service'));
  */
 
 let UserSchema = new GetterSchema({
-    firstName: {
-    	type: String,
-	    trim: true,
-	    required: 'First name is required'
-    },
-    lastName: {
-    	type: String,
-	    trim: true,
-	    required: 'First name is required'
-    },
+  firstName: {
+  	type: String,
+    trim: true,
+    required: 'First name is required'
+  },
+  lastName: {
+  	type: String,
+    trim: true,
+    required: 'Last name is required'
+  },
 	username: {
 		type: String,
 		trim: true,
@@ -87,7 +87,7 @@ let UserSchema = new GetterSchema({
 	},
 	// class standing (e.g. Freshman, Sophomore, etc.)
 	class: {
-    	type: String,
+  	type: String,
 		required: 'Class standing is required',
 		trim: true
 	},
