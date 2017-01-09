@@ -9,7 +9,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/about">About</a></li>
 			<li><a href="/profile">Profile</a></li>
-			<% if (username != null) { %>
+			<% if (username != null || user != null) { %>
 				<li><a href="/logout">Logout "<%= username %>"</a></li>
 			<% } else { %>
 				<li><a href="/cas_login">Login</a></li>
