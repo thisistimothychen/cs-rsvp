@@ -161,12 +161,15 @@ app.get('/logout', cas_loginController.cas_logout);
 let checkPermissions = function(req, res, pageToRender, roles) {
   if (roles.length == 0) {
     // Universally accessible page; don't need permissions
+    req.flash('info', 'Universally accessible page; don\'t need permissions.');
     res.render(pageToRender);
   } else {
     // Need to check permissions
 
     // Check if session exists
     if (req.session && req.session.cas_username) {
+      req.flash('info', 'req.session && req.session.cas_username = true.');
+      
       // Lookup the user in the DB based on CAS username
       User.findOne({username: req.session.cas_username}, function(err, user) {
         if (!user) {
@@ -189,6 +192,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
         }
       });
     } else {
+      req.flash('info', 'req.session && req.session.cas_username = false.');
       res.redirect('/cas_login');
     }
   }
