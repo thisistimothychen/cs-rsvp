@@ -112,7 +112,17 @@ let UserSchema = new GetterSchema({
  */
 
 // Text-search index
-UserSchema.index({ firstName: 'text', lastName: 'text', email: 'text', username: 'text', major: 'text', class: 'text' });
+UserSchema.index({
+  firstName: 'text',
+  lastName: 'text',
+  email: 'text',
+  username: 'text',
+  'roles.type.user': 'boolean',
+  'roles.type.admin': 'boolean',
+  'roles.type.superuser': 'boolean',
+  major: 'text',
+  class: 'text'
+});
 
 
 /**
