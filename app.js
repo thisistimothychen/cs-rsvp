@@ -162,7 +162,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
   if (roles.length == 0) {
     // Universally accessible page; don't need permissions
     req.flash('info', 'Universally accessible page; don\'t need permissions.');
-    res.render(pageToRender);
+    res.render(pageToRender, {username: req.session.cas_username}); // TODO do we need the username for unsecured pages?
   } else {
     // Need to check permissions
 
