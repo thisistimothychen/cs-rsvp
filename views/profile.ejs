@@ -13,9 +13,59 @@
 
   <main>
     <div class="jumbotron">
-      <h1>Profile</h1>
-      <p>Welcome <%= username %></p>
+      <h1>Profile <small><%= username %></small></h1>
+      
+      <form class="form-horizontal" action="/profile" method="POST">
+        <fieldset>
+          
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="firstName">First Name</label>  
+            <div class="col-md-4">
+              <input id="firstName" name="firstName" type="text" placeholder="" class="form-control input-md" required="">
+            </div>
+          </div>
+          
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="lastName">Last Name</label>  
+            <div class="col-md-4">
+              <input id="lastName" name="lastName" type="text" placeholder="" class="form-control input-md" required="">
+            </div>
+          </div>
+          
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="email">Email Address</label>  
+            <div class="col-md-4">
+              <input id="email" name="email" type="text" placeholder="" class="form-control input-md" required="" value="<%=username%>@terpmail.umd.edu">              
+            </div>
+          </div>
+          
+          <!-- File Button --> 
+          <!-- <div class="form-group">
+            <label class="col-md-4 control-label">Resume</label>
+            <div class="col-md-4">
+              <input id="resume" name="resume" class="input-file" type="file" style="margin-top: 0.5em;">
+              <span class="help-block">(Optional) By uploading your resume, you are giving permission for the UMD CS Department to send your resume to companies.</span>
+            </div>
+          </div> -->
+          
+          <!-- Button -->
+          <div class="form-group">
+            <div class="col-md-4 col-md-offset-4">
+              <button id="submit" name="submit" class="btn btn-default">Save Profile</button>
+            </div>
+          </div>
+          
+        </fieldset>
+      </form>
+      
     </div>
+    
+    
+
+    
   </main>
 
   <footer>
