@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const chalk = require('chalk');
 const errorHandler = require('errorhandler');
-const lusca = require('lusca');
+// const lusca = require('lusca');
 const dotenv = require('dotenv');
 const MongoStore = require('connect-mongo')(session);
 const flash = require('express-flash');
@@ -90,15 +90,15 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
-    next();
-  } else {
-    lusca.csrf()(req, res, next);
-  }
-});
-app.use(lusca.xframe('SAMEORIGIN'));
-app.use(lusca.xssProtection(true));
+// app.use((req, res, next) => {
+//   if (req.path === '/api/upload') {
+//     next();
+//   } else {
+//     lusca.csrf()(req, res, next);
+//   }
+// });
+// app.use(lusca.xframe('SAMEORIGIN'));
+// app.use(lusca.xssProtection(true));
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
@@ -165,6 +165,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
     res.render(pageToRender, {username: req.session.cas_username}); // TODO do we need the username for unsecured pages?
   } else {
     // Need to check permissions
+    console.log("Checking permissions");
 
     // Check if session exists
     if (req.session && req.session.cas_username) {
@@ -172,17 +173,22 @@ let checkPermissions = function(req, res, pageToRender, roles) {
       
       // Lookup the user in the DB based on CAS username
       User.findOne({username: req.session.cas_username}, function(err, user) {
+        console.log("Finding user");
+        
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
           res.render('profile.ejs', {username: req.session.cas_username});
         } else {
+          console.log("Found user");
+          
           // User has been created already; check permissions
           for (var i = 0; i < roles.length; i++) {
             // TODO check database text-search index compatibility
             if (roles[i] == "User" && user.roles.type.user ||
                 roles[i] == "Admin" && user.roles.type.admin ||
                 roles[i] == "Superuser" && user.roles.type.superuser) {
-              res.render(pageToRender, {user: user});
+              res.render(pageToRender, {user: user, username: user.username});
+              return;
             }
           }
           
@@ -206,6 +212,7 @@ app.get('/', function(req, res) {
 
 // profile page
 app.get('/profile', function(req, res) {
+  console.log("GET /profile");
   checkPermissions(req, res, 'profile.ejs', ['User']);
 });
 
@@ -226,11 +233,11 @@ app.post('/profile', function(req,res) {
   		}
   	},
   	// resume: 
-  	// major: 
-  	// class: 
+  	major: 'Undefined',
+  	class: 'Undefined'
   }, function (err, user) {
        if (err) {
-           res.send("There was a problem creating the user.");
+           res.send("There was a problem creating the user: " + err);
        } else {
            // User has been created
            console.log('POST creating new user: ' + user);
@@ -249,7 +256,49 @@ app.post('/profile', function(req,res) {
          });
        }
   })
-  
+});
+
+// upodate existing user
+app.post('/update_profile', function(req,res) {
+  // TODO update the way of checking permissions
+  // checkPermissions(req, res, 'profile.ejs', ['User']);
+  console.log('PUT')
+  User.update(req.body.user, {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+  	username: req.session.cas_username,
+  	email: req.body.email,
+  	roles: {
+  		type: {
+  			user: true,
+  			admin: false,
+  			superuser: false
+  		}
+  	},
+  	// resume: 
+  	major: 'Undefined',
+  	class: 'Undefined'
+  }, function (err, user) {
+       if (err) {
+           res.send("There was a problem updating the user: " + err);
+       } else {
+           // User has been created
+           console.log('POST updating new user: ' + user);
+           res.format({
+             //HTML response will set the location and redirect back to the home page. You could also create a 'success' page if that's your thing
+             html: function(){
+                //  // If it worked, set the header so the address bar doesn't still say /adduser
+                //  res.location("user");
+                // And forward to success page
+                res.redirect("/");
+             },
+             //JSON response will show the newly created user
+             json: function(){
+                res.json(user);
+             }
+         });
+       }
+  })
 });
 
 

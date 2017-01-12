@@ -25,7 +25,7 @@ exports.cas_login = function(req, res) {
 				} else {
 					// User exists in database
 					req.session.cas_username = cas_username;	// Sets a cookie with user's info
-					res.redirect('events');
+					res.redirect('/');
 				}
 			});
 		}
