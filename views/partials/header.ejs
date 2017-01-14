@@ -1,19 +1,21 @@
 <nav class="navbar navbar-default" role="navigation">
 	<div class="container-fluid">
-
-		<!-- <div class="navbar-header">
-			<a class="navbar-brand" href="#">Brand</a>
-		</div> -->
-
-		<ul class="nav navbar-nav">
-			<li><a href="/">Home</a></li>
-			<li><a href="/profile">Profile</a></li>
-			<% if (username != null || user != null) { %>
-				<li><a href="/logout">Logout "<%= username %>"</a></li>
-			<% } else { %>
-				<li><a href="/cas_login">Login</a></li>
-			<% } %>
-		</ul>
+		
+		<div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+				<li><a href="/">Events</a></li>
+				<% if (username != null || user != null) { %>
+					<li><a href="/profile">My Profile</a></li>
+				<% } %>
+      </ul>
+        <ul class="nav navbar-nav" style="float: right">
+					<% if (username != null || user != null) { %>
+						<li class="pull-right"><a href="/logout" class="navbar-nav pull-right">Logout</a></li>
+					<% } else { %>
+						<li><a href="/cas_login" class="navbar-nav pull-right">Login</a></li>
+					<% } %>
+      </ul>
+    </div>
 	  
 	</div>
 </nav>
