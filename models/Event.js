@@ -61,6 +61,10 @@ let EventSchema = new GetterSchema({
 		default: Date.now,
 		get: util.dateParse
 	},
+	createdBy: {
+		type: String,
+		trim: true,
+	}
 	tags: [{
 		type: String,
 		trim: true
