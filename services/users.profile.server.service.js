@@ -5,7 +5,7 @@ let
 	path = require('path'),
 	q = require('q'),
 
-	User = require(path.resolve('../models/User'));
+	User = require(path.resolve('./models/User'));
 
 module.exports = function() {
 

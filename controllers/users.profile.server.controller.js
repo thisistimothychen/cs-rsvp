@@ -3,8 +3,8 @@
 let	path = require('path'),
 	q = require('q'),
 
-	usersService = require(path.resolve('../services/users.profile.server.service.js'))();
-	User = require(path.resolve('../models/User'));
+	usersService = require(path.resolve('./services/users.profile.server.service.js'))(),
+	User = require(path.resolve('./models/User'));
 
 module.exports.create = function(req, res) {
 	usersService.createUser(req.body)
@@ -12,7 +12,7 @@ module.exports.create = function(req, res) {
 			res.status(200).json(result);
 		}, function(err) {
 			res.status(400).json(err);
-		}).done();
+		});
 };
 
 module.exports.update = function(req, res) {
