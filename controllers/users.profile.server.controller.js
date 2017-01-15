@@ -48,10 +48,43 @@ module.exports.create = function(req, res) {
 };
 
 module.exports.update = function(req, res) {
-	usersService.updateUser(req.body.oldUser, req.body.newUser)
+	console.log("HERE");
+	
+	usersService.updateUser(req.body.user, {
+	    firstName: req.body.firstName,
+	    lastName: req.body.lastName,
+	  	username: req.session.cas_username,
+	  	email: req.body.email,
+	  	roles: {
+	  		type: {
+	  			user: true,
+	  			admin: false,
+	  			superuser: false
+	  		}
+	  	},
+	  	// resume: 
+	  	major: 'Undefined',
+	  	class: 'Undefined'
+	  })
 		.then(function(result) {
-			res.status(200).json(result);
+			// User has been created
+			console.log('POST updating new user: ' + user);
+			res.format({
+				//HTML response will set the location and redirect back to the home page. You could also create a 'success' page if that's your thing
+				html: function(){
+					 //  // If it worked, set the header so the address bar doesn't still say /adduser
+					 //  res.location("user");
+					 // And forward to success page
+					 req.flash("info", "Your profile has been updated.");
+					 res.redirect("/profile");
+				},
+				//JSON response will show the newly created user
+				json: function(){
+					 res.json(user);
+				}
+			});
 		}, function(err) {
+			// res.send("There was a problem updating the user: " + err);
 			res.status(400).json(err);
 		});
 };
