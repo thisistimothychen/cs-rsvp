@@ -12,7 +12,7 @@ module.exports.create = function(req, res) {
 			res.status(200).json(result);
 		}, function(err) {
 			res.status(400).json(err);
-		}).done();
+		});
 };
 
 module.exports.update = function(req, res) {
@@ -21,7 +21,7 @@ module.exports.update = function(req, res) {
 			res.status(200).json(result);
 		}, function(err) {
 			res.status(400).json(err);
-		}).done();
+		});
 };
 
 module.exports.search = function(req, res) {
@@ -30,5 +30,5 @@ module.exports.search = function(req, res) {
 			res.status(200).json(result);
 		}, function(err) {
 			res.status(400).json(err);
-		}).done();
+		});
 };
