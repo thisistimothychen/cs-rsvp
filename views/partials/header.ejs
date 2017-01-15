@@ -4,6 +4,11 @@
 		<div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
 				<li><a href="/">Events</a></li>
+				
+				<% if (username != null && user != null && user.roles.type.admin == true) { %>
+					<li><a href="/create_event">New Event</a></li>
+				<% } %>
+				
 				<% if (username != null || user != null) { %>
 					<li><a href="/profile">My Profile</a></li>
 				<% } %>
