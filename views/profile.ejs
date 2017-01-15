@@ -43,7 +43,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="email">Email Address</label>  
             <div class="col-md-4">
-              <input id="email" name="email" type="text" placeholder="" class="form-control input-md" required="" <%= user ? 'value=' + username + '@terpmail.umd.edu' : '' %> >              
+              <input id="email" name="email" type="text" placeholder="" class="form-control input-md" required="" <%= user ? 'value=' + user.email : '' %> <%= (!user && username) ? 'value=' + username + '@terpmail.umd.edu' : '' %> >
             </div>
           </div>
           
