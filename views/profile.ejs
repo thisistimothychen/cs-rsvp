@@ -27,7 +27,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="firstName">First Name</label>  
             <div class="col-md-4">
-              <input id="firstName" name="firstName" type="text" placeholder="" class="form-control input-md" required="" value="<%=user.firstName%>">
+              <input id="firstName" name="firstName" type="text" placeholder="" class="form-control input-md" required="" <%= user ? 'value=' + user.firstName : '' %> >
             </div>
           </div>
           
@@ -35,7 +35,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="lastName">Last Name</label>  
             <div class="col-md-4">
-              <input id="lastName" name="lastName" type="text" placeholder="" class="form-control input-md" required="" value="<%=user.lastName%>">
+              <input id="lastName" name="lastName" type="text" placeholder="" class="form-control input-md" required="" <%= user ? 'value=' + user.lastName : '' %> >
             </div>
           </div>
           
@@ -43,7 +43,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="email">Email Address</label>  
             <div class="col-md-4">
-              <input id="email" name="email" type="text" placeholder="" class="form-control input-md" required="" value="<%=username%>@terpmail.umd.edu">              
+              <input id="email" name="email" type="text" placeholder="" class="form-control input-md" required="" <%= user ? 'value=' + username + '@terpmail.umd.edu' : '' %> >              
             </div>
           </div>
           
