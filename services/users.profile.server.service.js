@@ -24,7 +24,11 @@ module.exports = function() {
 		newUser.created = Date.now();
 		newUser.updated = Date.now();
 
-		return newUser.save();
+		return newUser.save().then(() => {
+			return searchUsers({_id: newUser._id});
+		}).then((result) => {
+			return q(result.elements[0]);
+		});
 	}
 
 	function updateUser(user, newUser) {
