@@ -27,8 +27,6 @@ module.exports.create = function(req, res) {
 
 	usersService.createUser(req.body)
 		.then(function(result) {
-			// console.log(result);
-			// res.status(200).json(result);
 			res.format({
 	           //HTML response will set the location and redirect back to the home page. You could also create a 'success' page if that's your thing
 	           html: function(){
