@@ -170,7 +170,6 @@ let checkPermissions = function(req, res, pageToRender, roles) {
     if (req.session.cas_username == null) {
       // Not logged in
       // Universally accessible page; don't need permissions
-      req.flash('info', 'Universally accessible page; don\'t need permissions.');
       res.render(pageToRender, {username: req.session.cas_username}); // TODO do we need the username for unsecured pages?
     } else {
       // Logged in
@@ -195,8 +194,6 @@ let checkPermissions = function(req, res, pageToRender, roles) {
 
     // Check if session exists
     if (req.session && req.session.cas_username) {
-      req.flash('info', 'req.session && req.session.cas_username = true.');
-      
       // Lookup the user in the DB based on CAS username
       User.findOne({username: req.session.cas_username}, function(err, user) {
         console.log("Finding user");
@@ -224,7 +221,6 @@ let checkPermissions = function(req, res, pageToRender, roles) {
         }
       });
     } else {
-      req.flash('info', 'req.session && req.session.cas_username = false.');
       res.redirect('/cas_login');
     }
   }
@@ -316,7 +312,8 @@ app.post('/update_profile', function(req,res) {
                 //  // If it worked, set the header so the address bar doesn't still say /adduser
                 //  res.location("user");
                 // And forward to success page
-                res.redirect("/");
+                req.flash("info", "Your profile has been updated.");
+                res.redirect("/profile");
              },
              //JSON response will show the newly created user
              json: function(){
