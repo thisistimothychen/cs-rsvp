@@ -119,6 +119,13 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
+// Moment.js
+var moment = require('moment');
+moment().format();
+
+
+
+
 /**
  * Primary app routes.
  */
@@ -160,9 +167,28 @@ app.get('/logout', cas_loginController.cas_logout);
  */
 let checkPermissions = function(req, res, pageToRender, roles) {
   if (roles.length == 0) {
-    // Universally accessible page; don't need permissions
-    req.flash('info', 'Universally accessible page; don\'t need permissions.');
-    res.render(pageToRender, {username: req.session.cas_username}); // TODO do we need the username for unsecured pages?
+    if (req.session.cas_username == null) {
+      // Not logged in
+      // Universally accessible page; don't need permissions
+      req.flash('info', 'Universally accessible page; don\'t need permissions.');
+      res.render(pageToRender, {username: req.session.cas_username}); // TODO do we need the username for unsecured pages?
+    } else {
+      // Logged in
+      // Lookup the user in the DB based on CAS username
+      User.findOne({username: req.session.cas_username}, function(err, user) {
+        console.log("Finding user");
+        
+        if (!user) {
+          // First time login; CREATE NEW USER AT PROFILE PAGE
+          res.render('profile.ejs', {user: user, username: req.session.cas_username});
+        } else {
+          console.log("Found user");
+          res.render(pageToRender, {user: user, username: user.username});
+          return;
+        }
+      });
+    }
+    
   } else {
     // Need to check permissions
     console.log("Checking permissions");
@@ -177,7 +203,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
         
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
-          res.render('profile.ejs', {username: req.session.cas_username});
+          res.render('profile.ejs', {user: user, username: req.session.cas_username});
         } else {
           console.log("Found user");
           
@@ -262,7 +288,7 @@ app.post('/profile', function(req,res) {
 app.post('/update_profile', function(req,res) {
   // TODO update the way of checking permissions
   // checkPermissions(req, res, 'profile.ejs', ['User']);
-  console.log('PUT')
+  console.log('UPDATE PROFILE')
   User.update(req.body.user, {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -299,6 +325,14 @@ app.post('/update_profile', function(req,res) {
          });
        }
   })
+});
+
+
+// new event page
+app.get('/create_event', function(req, res) {
+  console.log("GET /create_event");
+  // TODO remove 'User' role
+  checkPermissions(req, res, 'new_event.ejs', ['User', 'Admin', 'Superuser']);
 });
 
 
