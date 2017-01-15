@@ -35,6 +35,7 @@ const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
 const cas_loginController = require('./controllers/cas_login');
+const userProfileController = require('./controllers/users.profile.server.controller');
 
 /**
  * API keys and Passport configuration.
