@@ -156,7 +156,9 @@ let checkPermissions = function(req, res, pageToRender, roles) {
         
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
-          res.render('profile.ejs', {user: user, username: req.session.cas_username});
+          userProfileController.create(req, res).then(
+            res.render('profile.ejs', {user: user, username: req.session.cas_username});
+          );
         } else {
           console.log("Found user");
           res.render(pageToRender, {user: user, username: user.username});
@@ -177,6 +179,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
         
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
+          userProfileController.create(req, res);
           res.render('profile.ejs', {user: user, username: req.session.cas_username});
         } else {
           console.log("Found user");
@@ -204,6 +207,80 @@ let checkPermissions = function(req, res, pageToRender, roles) {
 }
 
 
+
+/**
+ * Call to check authentication and permissions/user roles
+ *
+ * @param {Function} callback
+ *      Callback function that takes in JSON object (parameters to pass to view)
+ * @param {Array} roles
+ *      Empty array for universally accessible page
+ *      String array for roles allowed to access the pageToRender
+ */
+let checkPermissionsWithCallback = function(req, res, callback, roles) {
+  if (roles.length == 0) {
+    if (req.session.cas_username == null) {
+      // Not logged in
+      // Universally accessible page; don't need permissions
+      callback({username: req.session.cas_username});
+    } else {
+      // Logged in
+      // Lookup the user in the DB based on CAS username
+      User.findOne({username: req.session.cas_username}, function(err, user) {
+        console.log("Finding user");
+        
+        if (!user) {
+          // First time login; CREATE NEW USER AT PROFILE PAGE
+          res.render('profile.ejs', {user: user, username: req.session.cas_username});
+        } else {
+          console.log("Found user");
+          callback({user: user, username: user.username});
+        }
+      });
+    }
+    
+  } else {
+    // Need to check permissions
+    console.log("Checking permissions");
+
+    // Check if session exists
+    if (req.session && req.session.cas_username) {
+      // Lookup the user in the DB based on CAS username
+      User.findOne({username: req.session.cas_username}, function(err, user) {
+        console.log("Finding user");
+        
+        if (!user) {
+          // First time login; CREATE NEW USER AT PROFILE PAGE
+          res.render('profile.ejs', {user: user, username: req.session.cas_username});
+        } else {
+          console.log("Found user");
+          
+          // User has been created already; check permissions
+          for (var i = 0; i < roles.length; i++) {
+            // TODO check database text-search index compatibility
+            if (roles[i] == "User" && user.roles.type.user ||
+                roles[i] == "Admin" && user.roles.type.admin ||
+                roles[i] == "Superuser" && user.roles.type.superuser) {
+              callback({user: user, username: user.username});
+              return;
+            }
+          }
+          
+          // No permission to view pageToRender
+          req.flash('danger', 'Sorry, you have insufficient user privileges to access the ' + pageToRender.substring(0, pageToRender.length - 4) + ' page.');
+          res.redirect('/');
+        }
+      });
+    } else {
+      res.redirect('/cas_login');
+    }
+  }
+}
+
+
+
+
+
 // index page 
 app.get('/', function(req, res) {
   checkPermissions(req, res, 'index.ejs', []);
@@ -216,10 +293,21 @@ app.get('/profile', function(req, res) {
 });
 
 // create new profile
-app.post('/profile', userProfileController.create);
+app.post('/profile', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    userProfileController.create(req, res);
+    res.render('index.ejs', params);
+  }, []);
+});
 
-// upodate existing user
-app.post('/update_profile', userProfileController.update);
+// update existing user
+app.post('/update_profile', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    userProfileController.update(req, res);
+    console.log("Updating user: " + req.toString());
+    res.render('index.ejs', params);
+  }, ['User']);
+});
 
 
 // new event page
