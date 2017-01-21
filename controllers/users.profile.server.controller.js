@@ -8,7 +8,7 @@ let	path = require('path'),
 
 module.exports.create = function(req, res) {
 	req.body.username = req.session.cas_username;
-
+    req.body.email = `${req.session.cas_username}@terpmail.umd.edu`;
 	if (req.body.class == null)
 		req.body.class = 'Undefined';
 
@@ -27,19 +27,7 @@ module.exports.create = function(req, res) {
 
 	usersService.createUser(req.body)
 		.then(function(result) {
-			res.format({
-	           //HTML response will set the location and redirect back to the home page. You could also create a 'success' page if that's your thing
-	           html: function(){
-		           //  // If it worked, set the header so the address bar doesn't still say /adduser
-		           //  res.location("user");
-		           // And forward to success page
-		           res.redirect("/");
-	           },
-	           //JSON response will show the newly created user
-	           json: function(){
-		           res.json(result);
-	           }
-			});
+			res.render('profile.ejs', {user: result, username: req.session.cas_username});
 		}, function(err) {
 			res.status(400).json(err);
 		});

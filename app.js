@@ -143,6 +143,7 @@ app.get('/logout', cas_loginController.cas_logout);
  *      String array for roles allowed to access the pageToRender
  */
 let checkPermissions = function(req, res, pageToRender, roles) {
+  console.log(roles.length);
   if (roles.length == 0) {
     if (req.session.cas_username == null) {
       // Not logged in
@@ -151,14 +152,12 @@ let checkPermissions = function(req, res, pageToRender, roles) {
     } else {
       // Logged in
       // Lookup the user in the DB based on CAS username
-      User.findOne({username: req.session.cas_username}, function(err, user) {
+      User.findOne({username: req.session.cas_username}, function(user, err) {
         console.log("Finding user");
         
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
-          userProfileController.create(req, res).then(
-            res.render('profile.ejs', {user: user, username: req.session.cas_username});
-          );
+          userProfileController.create(req, res);
         } else {
           console.log("Found user");
           res.render(pageToRender, {user: user, username: user.username});
@@ -174,13 +173,13 @@ let checkPermissions = function(req, res, pageToRender, roles) {
     // Check if session exists
     if (req.session && req.session.cas_username) {
       // Lookup the user in the DB based on CAS username
-      User.findOne({username: req.session.cas_username}, function(err, user) {
+      User.findOne({username: req.session.cas_username}, function(user, err) {
         console.log("Finding user");
         
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
           userProfileController.create(req, res);
-          res.render('profile.ejs', {user: user, username: req.session.cas_username});
+          // res.render('profile.ejs', {user: user, username: req.session.cas_username});
         } else {
           console.log("Found user");
           
@@ -226,12 +225,12 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
     } else {
       // Logged in
       // Lookup the user in the DB based on CAS username
-      User.findOne({username: req.session.cas_username}, function(err, user) {
+      User.findOne({username: req.session.cas_username}, function(user, err) {
         console.log("Finding user");
         
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
-          res.render('profile.ejs', {user: user, username: req.session.cas_username});
+          userProfileController.create(req, res);
         } else {
           console.log("Found user");
           callback({user: user, username: user.username});
@@ -246,12 +245,12 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
     // Check if session exists
     if (req.session && req.session.cas_username) {
       // Lookup the user in the DB based on CAS username
-      User.findOne({username: req.session.cas_username}, function(err, user) {
+      User.findOne({username: req.session.cas_username}, function(user, err) {
         console.log("Finding user");
         
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
-          res.render('profile.ejs', {user: user, username: req.session.cas_username});
+          userProfileController.create(req, res);
         } else {
           console.log("Found user");
           
