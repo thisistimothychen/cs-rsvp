@@ -291,14 +291,6 @@ app.get('/profile', function(req, res) {
   checkPermissions(req, res, 'profile.ejs', ['User']);
 });
 
-// create new profile
-app.post('/profile', function(req, res) {
-  checkPermissionsWithCallback(req, res, function(params) {
-    userProfileController.create(req, res);
-    res.render('index.ejs', params);
-  }, []);
-});
-
 // update existing user
 app.post('/update_profile', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
