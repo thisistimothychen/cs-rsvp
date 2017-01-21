@@ -42,12 +42,12 @@ let UserSchema = new GetterSchema({
   firstName: {
   	type: String,
     trim: true,
-    required: 'First name is required'
+    // required: 'First name is required'
   },
   lastName: {
   	type: String,
     trim: true,
-    required: 'Last name is required'
+    // required: 'Last name is required'
   },
 	username: {
 		type: String,
@@ -82,13 +82,13 @@ let UserSchema = new GetterSchema({
 	},
 	major: {
     	type: String,
-		required: 'Major is required',
+		// required: 'Major is required',
 		trim: true
 	},
 	// class standing (e.g. Freshman, Sophomore, etc.)
 	class: {
   	type: String,
-		required: 'Class standing is required',
+		// required: 'Class standing is required',
 		trim: true
 	},
 	updated: {
