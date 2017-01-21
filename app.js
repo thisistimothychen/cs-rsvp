@@ -143,19 +143,20 @@ app.get('/logout', cas_loginController.cas_logout);
  *      String array for roles allowed to access the pageToRender
  */
 let checkPermissions = function(req, res, pageToRender, roles) {
-  console.log(roles.length);
   if (roles.length == 0) {
     if (req.session.cas_username == null) {
+      console.log("Not logged in");
       // Not logged in
       // Universally accessible page; don't need permissions
       res.render(pageToRender, {username: req.session.cas_username}); // TODO do we need the username for unsecured pages?
     } else {
       // Logged in
       // Lookup the user in the DB based on CAS username
-      User.findOne({username: req.session.cas_username}, function(user, err) {
-        console.log("Finding user");
-        
+      User.findOne({username: req.session.cas_username}, function(err, user) {
+        console.log("Finding user " + req.session.cas_username + " in database");
+
         if (!user) {
+          console.log("User " + req.session.cas_username + " not found")
           // First time login; CREATE NEW USER AT PROFILE PAGE
           userProfileController.create(req, res);
         } else {
@@ -165,7 +166,6 @@ let checkPermissions = function(req, res, pageToRender, roles) {
         }
       });
     }
-    
   } else {
     // Need to check permissions
     console.log("Checking permissions");
@@ -173,16 +173,16 @@ let checkPermissions = function(req, res, pageToRender, roles) {
     // Check if session exists
     if (req.session && req.session.cas_username) {
       // Lookup the user in the DB based on CAS username
-      User.findOne({username: req.session.cas_username}, function(user, err) {
+      User.findOne({username: req.session.cas_username}, function(err, user) {
         console.log("Finding user");
-        
+
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
           userProfileController.create(req, res);
           // res.render('profile.ejs', {user: user, username: req.session.cas_username});
         } else {
           console.log("Found user");
-          
+
           // User has been created already; check permissions
           for (var i = 0; i < roles.length; i++) {
             // TODO check database text-search index compatibility
@@ -193,7 +193,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
               return;
             }
           }
-          
+
           // No permission to view pageToRender
           req.flash('danger', 'Sorry, you have insufficient user privileges to access the ' + pageToRender.substring(0, pageToRender.length - 4) + ' page.');
           res.redirect('/');
@@ -225,9 +225,9 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
     } else {
       // Logged in
       // Lookup the user in the DB based on CAS username
-      User.findOne({username: req.session.cas_username}, function(user, err) {
+      User.findOne({username: req.session.cas_username}, function(err, user) {
         console.log("Finding user");
-        
+
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
           userProfileController.create(req, res);
@@ -237,7 +237,7 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
         }
       });
     }
-    
+
   } else {
     // Need to check permissions
     console.log("Checking permissions");
@@ -245,15 +245,15 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
     // Check if session exists
     if (req.session && req.session.cas_username) {
       // Lookup the user in the DB based on CAS username
-      User.findOne({username: req.session.cas_username}, function(user, err) {
+      User.findOne({username: req.session.cas_username}, function(err, user) {
         console.log("Finding user");
-        
+
         if (!user) {
           // First time login; CREATE NEW USER AT PROFILE PAGE
           userProfileController.create(req, res);
         } else {
           console.log("Found user");
-          
+
           // User has been created already; check permissions
           for (var i = 0; i < roles.length; i++) {
             // TODO check database text-search index compatibility
@@ -264,7 +264,7 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
               return;
             }
           }
-          
+
           // No permission to view pageToRender
           req.flash('danger', 'Sorry, you have insufficient user privileges to access the ' + pageToRender.substring(0, pageToRender.length - 4) + ' page.');
           res.redirect('/');
@@ -280,7 +280,7 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
 
 
 
-// index page 
+// index page
 app.get('/', function(req, res) {
   checkPermissions(req, res, 'index.ejs', []);
 });

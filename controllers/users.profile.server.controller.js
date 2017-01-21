@@ -9,6 +9,7 @@ let	path = require('path'),
 module.exports.create = function(req, res) {
 	req.body.username = req.session.cas_username;
     req.body.email = `${req.session.cas_username}@terpmail.umd.edu`;
+
 	if (req.body.class == null)
 		req.body.class = 'Undefined';
 
@@ -48,7 +49,7 @@ module.exports.update = function(req, res) {
 		  			superuser: false
 		  		}
 		  	},
-		  	// resume: 
+		  	// resume:
 		  	major: 'Undefined',
 		  	class: 'Undefined'
 		  })
