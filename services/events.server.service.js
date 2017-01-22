@@ -5,7 +5,7 @@ let
 	path = require('path'),
 	q = require('q'),
 
-	Event = require(path.resolve('../models/Event'));
+	Event = require(path.resolve('./models/Event'));
 
 module.exports = function() {
 
