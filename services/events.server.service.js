@@ -37,7 +37,7 @@ module.exports = function() {
 	}
 
 	function searchEvents(query) {
-		return Event.find(query).exec().then(function(result) {
+		return Event.find(query).sort({startTime: 1}).exec().then(function(result) {
 			if (null == result) {
 				return q({
 					length: 0,
