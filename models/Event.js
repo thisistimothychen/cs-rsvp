@@ -30,6 +30,10 @@ let EventSchema = new GetterSchema({
 	photo: {
 		type: String
 	},
+	sponsors: [{
+		type: String,
+		trim: true
+	}],
 	rsvpUsers: [{
 		type: mongoose.Schema.ObjectId,
 		ref: 'User'
@@ -42,6 +46,9 @@ let EventSchema = new GetterSchema({
 		type: String,
 		trim: true
 	}],
+	lockoutTime: {
+		type: Number
+	},
 	// minimum class standing (e.g. Freshman, Sophomore, etc.)
 	class: {
 		type: String,
