@@ -28,7 +28,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="name">Event Name</label>
             <div class="col-md-4">
-            <input id="name" name="name" type="text" placeholder="" class="form-control input-md" required="" value="<%= (event != null && event.name) ? event.name : '' %>" >
+            <input id="name" name="name" type="text" placeholder="" class="form-control input-md" required="Event name is required." value="<%= (event != null && event.name) ? event.name : '' %>" >
 
             </div>
           </div>
@@ -38,7 +38,7 @@
             <label class="col-md-4 control-label" for="startTime">Start Time</label>
             <div class="col-md-4">
                   <div class='input-group date' id='datetimepicker1'>
-                      <input id="startTime" name="startTime" type='text' class="form-control" value="<%= (startDateTimeStr) ? startDateTimeStr : '' %>" />
+                      <input id="startTime" name="startTime" type='text' class="form-control"  required="Start time is required." value="<%= (startDateTimeStr) ? startDateTimeStr : '' %>" />
                       <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
                       </span>
@@ -72,7 +72,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="location">Location</label>
             <div class="col-md-4">
-            <input id="location" name="location" type="text" placeholder="" class="form-control input-md" value="<%= (event != null && event.location) ? event.location : '' %>" >
+            <input id="location" name="location" type="text" placeholder="" class="form-control input-md" required="Location is required." value="<%= (event != null && event.location) ? event.location : '' %>" >
 
             </div>
           </div>
