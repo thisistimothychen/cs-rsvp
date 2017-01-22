@@ -90,7 +90,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="sponsors">Sponsors</label>
             <div class="col-md-4">
-            <input id="sponsors" name="sponsors" type="text" placeholder="" class="form-control input-md">
+            <input id="sponsors" name="sponsors" type="text" placeholder="" class="form-control input-md" value="<%= (event != null && event.sponsors) ? event.sponsors : '' %>" >
 
             </div>
           </div>
@@ -99,7 +99,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="description">Description</label>
             <div class="col-md-4">
-              <textarea class="form-control" id="description" name="description"></textarea>
+              <textarea class="form-control" id="description" name="description"><%= (event != null && event.description) ? event.description : '' %></textarea>
             </div>
           </div>
 
@@ -107,7 +107,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="rsvpLimit">RSVP Limit</label>
             <div class="col-md-4">
-            <input id="rsvpLimit" name="rsvpLimit" type="text" placeholder="" class="form-control input-md">
+            <input id="rsvpLimit" name="rsvpLimit" type="text" placeholder="" class="form-control input-md" value="<%= (event != null && event.rsvpLimit) ? event.rsvpLimit : '' %>" >
             <span class="help-block">Leave blank if no RSVP limit.</span>
             </div>
           </div>
@@ -116,7 +116,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="major">Major Restrictions</label>
             <div class="col-md-4">
-            <input id="major" name="major" type="text" placeholder="" class="form-control input-md">
+            <input id="major" name="major" type="text" placeholder="" class="form-control input-md" value="<%= (event != null && event.major) ? event.major : '' %>" >
             <span class="help-block">Leave blank if no restrictions on major. Separate restrictions with commas and a space. Only those with majors listed here will be allowed to RSVP.</span>
             </div>
           </div>
@@ -125,7 +125,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="lockoutTime">Lockout Time</label>
             <div class="col-md-4">
-            <input id="lockoutTime" name="lockoutTime" type="text" placeholder="" class="form-control input-md">
+            <input id="lockoutTime" name="lockoutTime" type="text" placeholder="" class="form-control input-md"value="<%= (event != null && event.lockoutTime) ? event.lockoutTime : '' %>" >
             <span class="help-block">Number of <b>hours</b> before students can RSVP/unRSVP from this event. Leave blank if no lockout time.</span>
             </div>
           </div>
@@ -134,7 +134,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="tags">Tags</label>
             <div class="col-md-4">
-            <input id="tags" name="tags" type="text" class="form-control input-md">
+            <input id="tags" name="tags" type="text" class="form-control input-md" value="<%= (event != null && event.tags) ? event.tags : '' %>" >
             <span class="help-block">Attributes associated with this event. For categorization purposes.</span>
             </div>
           </div>
