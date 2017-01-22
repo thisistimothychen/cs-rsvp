@@ -36,6 +36,7 @@ const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
 const cas_loginController = require('./controllers/cas_login');
 const userProfileController = require('./controllers/users.profile.server.controller');
+const eventController = require('./controllers/events.server.controller');
 
 /**
  * API keys and Passport configuration.
@@ -128,6 +129,7 @@ moment().format();
 
 // Initialize database paths
 let User = require(path.resolve('./models/User'));
+let Event = require(path.resolve('./models/Event'));
 
 app.get('/cas_login', cas_loginController.cas_login);
 app.get('/logout', cas_loginController.cas_logout);
@@ -300,12 +302,61 @@ app.post('/profile', function(req, res) {
 });
 
 
-// new event page
+
+// view event creation page
 app.get('/create_event', function(req, res) {
   console.log("GET /create_event");
   // TODO remove 'User' role
-  checkPermissions(req, res, 'new_event.ejs', ['User', 'Admin', 'Superuser']);
+  checkPermissions(req, res, 'event_form.ejs', ['User', 'Admin', 'Superuser']);
 });
+
+// create new event
+app.post('/event', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    console.log("Creating event");
+    eventController.create(req, res);
+  }, ['Admin', 'Superuser']);
+});
+
+// show event edit page (admin view)
+app.get('/event/:id/edit', function(req, res) {
+  // TODO remove 'User' role
+  checkPermissionsWithCallback(req, res, function(params) {
+    Event.findOne({ _id: req.params.id })
+    .then(function(event) {
+      params.event = event;
+      params.startDateTimeStr = getDateTimeStr(event.startTime);
+      params.endDateTimeStr = getDateTimeStr(event.endTime);
+      res.render('event_form.ejs', params);
+    })
+  }, ['User', 'Admin', 'Superuser']);
+});
+
+// edit existing event
+app.post('/event/:id/edit', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    console.log("Updating event " + req.params.id);
+    eventController.update(req, res);
+  }, ['Admin', 'Superuser']);
+});
+
+
+function getDateTimeStr(mili) {
+  console.log(mili);
+  var rawDate = new Date(mili);
+  rawDate.setTime(rawDate - rawDate.getTimezoneOffset()*60*1000);
+  var rawDateStr = rawDate.toJSON();
+
+  // Get AM/PM
+  var AmPm = "AM";
+  if (rawDate.getUTCHours() > 12) {
+    AmPm = "PM";
+  }
+
+  dateStr = rawDateStr.substr(5,2) + "/" + rawDateStr.substr(8,2) + "/" + rawDateStr.substr(0,4) + " " + rawDateStr.substr(11,5) + " " + AmPm;
+  console.log(dateStr);
+  return dateStr;
+}
 
 
 

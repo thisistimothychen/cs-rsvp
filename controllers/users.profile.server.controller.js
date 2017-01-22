@@ -58,8 +58,8 @@ module.exports.update = function(req, res) {
 				console.log('POST updating new user: ' + result);
 				req.flash("info", "Your profile has been updated.");
 
-				console.log("Previous user: " + oldUser);
-				console.log("New user: " + result);
+				// console.log("Previous user: " + oldUser);
+				// console.log("New user: " + result);
 
 				res.redirect("profile");
 			}, function(err) {
