@@ -23,7 +23,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="firstName">First Name</label>
             <div class="col-md-4">
-              <input id="firstName" name="firstName" type="text" placeholder="" class="form-control input-md" required="" <%= user.firstName ? 'value=' + user.firstName : '' %> >
+              <input id="firstName" name="firstName" type="text" placeholder="" class="form-control input-md" required="" value="<%= (user && user.firstName) ? user.firstName : '' %>" >
             </div>
           </div>
 
@@ -31,7 +31,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="lastName">Last Name</label>
             <div class="col-md-4">
-              <input id="lastName" name="lastName" type="text" placeholder="" class="form-control input-md" required="" <%= user.lastName ? 'value=' + user.lastName : '' %> >
+              <input id="lastName" name="lastName" type="text" placeholder="" class="form-control input-md" required="" value="<%= (user && user.lastName) ? user.lastName : '' %>" >
             </div>
           </div>
 
@@ -39,7 +39,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="email">Email Address</label>
             <div class="col-md-4">
-              <input id="email" name="email" type="text" placeholder="" class="form-control input-md" required="" <%= user ? 'value=' + user.email : '' %> <%= (!user && username) ? 'value=' + username + '@terpmail.umd.edu' : '' %> >
+              <input id="email" name="email" type="text" placeholder="" class="form-control input-md" required="" value="<%= (user && user.email) ? user.email : '' %>" >
             </div>
           </div>
 
