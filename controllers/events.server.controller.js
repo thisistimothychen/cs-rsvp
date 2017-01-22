@@ -9,6 +9,7 @@ let path = require('path'),
 module.exports.create = function(req, res) {
 	eventsService.createEvent(req.body)
 		.then(function(event) {
+			req.flash('info', 'The event has been created.');
 			res.redirect(`/event/${event._id}/edit`);
 		}, function(err) {
 			res.status(400).json(err);
