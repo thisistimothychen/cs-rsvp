@@ -47,6 +47,7 @@
     "node-linkedin": "^0.5.4",
     "node-sass-middleware": "^0.9.8",
     "nodemailer": "^2.6.4",
+    "nodemon": "^1.11.0",
     "passport": "0.3.2",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",
