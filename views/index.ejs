@@ -21,9 +21,13 @@
 					<% for(var i=0; i < allEvents.length; i++) { %>
 
 						<h3><%= allEvents[i].name %></h3>
-						<p><%= allEvents[i].startTime %>
-						<br><%= allEvents[i].endTime %>
+						<p><%=getDateTimeStr(allEvents[i].startTime)%>
+						<br><%=getDateTimeStr(allEvents[i].endTime)%>
 						<br><%= allEvents[i].location %></p>
+
+						<% if (user && user.roles.type.admin || user.roles.type.superuser) { %>
+							<button id=<%= "edit-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/edit'">Edit Event</button>
+						<% } %>
 
 					<% } %>
 

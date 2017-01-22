@@ -287,6 +287,7 @@ app.get('/', function(req, res) {
     eventsService.searchEvents({})
     .then(function(allEvents) {
       params.allEvents = allEvents.elements;
+      params.getDateTimeStr = getDateTimeStr;
       res.render('index.ejs', params);
     })
   }, []);
