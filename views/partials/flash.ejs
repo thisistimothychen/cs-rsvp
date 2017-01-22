@@ -1,10 +1,17 @@
 <% if (messages.info) { %>
-	<div class="alert alert-info">
+	<div class="flash alert alert-info">
 			<%= messages.info %>
 	</div>
 <% } %>
 <% if (messages.danger) { %>
-	<div class="alert alert-danger">
+	<div class="flash alert alert-danger">
 			<%= messages.danger %>
 	</div>
 <% } %>
+
+
+<script>
+	setTimeout(function(){
+		$('.flash').fadeOut();
+	}, 4000);
+</script>
