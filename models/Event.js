@@ -35,7 +35,7 @@ let EventSchema = new GetterSchema({
 		ref: 'User'
 	}],
 	rsvpLimit: {
-		type: int
+		type: Number
 	},
 	// major restrictions
 	major: [{
@@ -64,7 +64,7 @@ let EventSchema = new GetterSchema({
 	createdBy: {
 		type: String,
 		trim: true,
-	}
+	},
 	tags: [{
 		type: String,
 		trim: true
