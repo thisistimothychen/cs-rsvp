@@ -63,7 +63,7 @@ module.exports.update = function(req, res) {
 						 //  res.location("user");
 						 // And forward to success page
 						 req.flash("info", "Your profile has been updated.");
-						 res.redirect("/profile");
+						 res.render("profile.ejs", {user: result, username: req.session.cas_username});
 					},
 					//JSON response will show the newly created user
 					json: function(){

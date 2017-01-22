@@ -292,11 +292,10 @@ app.get('/profile', function(req, res) {
 });
 
 // update existing user
-app.post('/update_profile', function(req, res) {
+app.post('/profile', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
+    console.log("Updating user " + req.session.cas_username);
     userProfileController.update(req, res);
-    console.log("Updating user: " + req.toString());
-    res.render('index.ejs', params);
   }, ['User']);
 });
 
