@@ -37,6 +37,7 @@ const contactController = require('./controllers/contact');
 const cas_loginController = require('./controllers/cas_login');
 const userProfileController = require('./controllers/users.profile.server.controller');
 const eventController = require('./controllers/events.server.controller');
+const eventsService = require('./services/events.server.service.js')();
 
 /**
  * API keys and Passport configuration.
@@ -280,11 +281,15 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
 
 
 
-
-
 // index page
 app.get('/', function(req, res) {
-  checkPermissions(req, res, 'index.ejs', []);
+  checkPermissionsWithCallback(req, res, function(params) {
+    eventsService.searchEvents({})
+    .then(function(allEvents) {
+      params.allEvents = allEvents.elements;
+      res.render('index.ejs', params);
+    })
+  }, []);
 });
 
 // profile page
