@@ -54,12 +54,12 @@ module.exports.update = function(req, res) {
 		  	class: 'Undefined'
 		  })
 			.then(function(result) {
-				// User has been created
+				// User has been updated
 				console.log('POST updating new user: ' + result);
 				req.flash("info", "Your profile has been updated.");
 
 				console.log("Previous user: " + oldUser);
-				console.log("New user: " + user);
+				console.log("New user: " + result);
 
 				res.redirect("profile");
 			}, function(err) {
