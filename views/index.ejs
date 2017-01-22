@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<% var username = username; var user = user; %>
+	<% var username = username; var user = user; var allEvents = allEvents %>
 	<% include ./partials/head %>
 </head>
 <body class="container">
@@ -14,15 +14,24 @@
 	<main>
 		<div class="row">
 			<div class="col-sm-8">
-			
+
 				<div class="jumbotron">
-					<h1>This is great</h1>
-					<p>Welcome to templating using EJS</p>
+					<h1>Upcoming CS Events</h1>
+
+					<% for(var i=0; i < allEvents.length; i++) { %>
+
+						<h3><%= allEvents[i].name %></h3>
+						<p><%= allEvents[i].startTime %>
+						<br><%= allEvents[i].endTime %>
+						<br><%= allEvents[i].location %></p>
+
+					<% } %>
+
 				</div>
-				
+
 			</div>
 			<div class="col-sm-4">
-				
+
 				<div class="well">
 					<h3>Look I'm A Sidebar!</h3>
 				</div>
@@ -34,6 +43,6 @@
 	<footer>
 		<% include ./partials/footer %>
 	</footer>
-	
+
 </body>
 </html>
