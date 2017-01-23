@@ -288,6 +288,8 @@ app.get('/', function(req, res) {
     .then(function(allEvents) {
       params.allEvents = allEvents.elements;
       params.getDateTimeStr = getDateTimeStr;
+      params.getDateTimePrettyFormat = getDateTimePrettyFormat;
+      params.sameDate = sameDate;
       res.render('index.ejs', params);
     })
   }, []);
@@ -362,6 +364,37 @@ function getDateTimeStr(mili) {
   dateStr = rawDateStr.substr(5,2) + "/" + rawDateStr.substr(8,2) + "/" + rawDateStr.substr(0,4) + " " + rawDateStr.substr(11,5) + " " + AmPm;
   console.log(dateStr);
   return dateStr;
+}
+
+function getDateTimePrettyFormat(mili) {
+  var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var rawDate = new Date(mili);
+  rawDate.setTime(rawDate - rawDate.getTimezoneOffset()*60*1000);
+  var rawDateStr = rawDate.toJSON();
+
+  // Get AM/PM
+  var AmPm = "AM";
+  var hours = rawDate.getUTCHours();
+  if (rawDate.getUTCHours() > 12) {
+    AmPm = "PM";
+    hours -= 12;
+  } else if (rawDate.getUTCHours() == 12) {
+    AmPm = "PM";
+  }
+  
+  return days[rawDate.getDay()] + " " + months[rawDate.getMonth()] + " " + rawDate.getDate() + ", " + rawDate.getFullYear() + " " + hours + ":" + rawDateStr.substr(14,2) + " " + AmPm;
+}
+
+/*
+ * Returns true if the two dates are the same date (different times)
+ */
+function sameDate(date1, date2) {
+  if (date1.getDate() == date2.getDate() && date1.getMonth() == date2.getMonth() && date1.getYear() == date2.getYear()) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 
