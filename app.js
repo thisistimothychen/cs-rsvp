@@ -340,6 +340,22 @@ app.get('/event/:id/edit', function(req, res) {
   }, ['User', 'Admin', 'Superuser']);
 });
 
+// show event
+app.get('/event/:id', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    Event.findOne({ _id: req.params.id })
+    .then(function(event) {
+      params.event = event;
+      params.startDateTimeStr = getDateTimeStr(event.startTime);
+      params.endDateTimeStr = getDateTimeStr(event.endTime);
+      params.getDateTimeStr = getDateTimeStr;
+      params.getDateTimePrettyFormat = getDateTimePrettyFormat;
+      params.sameDate = sameDate;
+      res.render('event_show.ejs', params);
+    })
+  }, ['User', 'Admin', 'Superuser']);
+});
+
 // edit existing event
 app.post('/event/:id/edit', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {

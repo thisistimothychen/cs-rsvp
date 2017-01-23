@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var username = username; var user = user; var event = event; var startDateTimeStr = startDateTimeStr; var endDateTimeStr = endDateTimeStr; %>
+  <% include ./partials/head %>
+</head>
+<body class="container">
+
+  <header>
+    <% include ./partials/flash %>
+    <% include ./partials/header %>
+  </header>
+
+  <main>
+    <div class="jumbotron">
+      <h1><%= event.name %></h1>
+
+      <p>
+      
+        <!-- Start/end date and time -->
+        <% if (getDateTimeStr(event.startTime).substr(0,10) == getDateTimeStr(event.endTime).substr(0,10)) { %>
+          <!-- Same start/end dates. -->
+          <%= getDateTimePrettyFormat(event.startTime) %> - <%= getDateTimePrettyFormat(event.endTime).substr(16) %>
+        <% } else { %>
+          <!-- Different start/end dates. -->
+          <%= getDateTimePrettyFormat(event.startTime) %> - <%= getDateTimePrettyFormat(event.endTime) %>
+        <% } %>
+        
+        <!-- Location (required) -->
+        <br><%= event.location %>
+
+        <!-- RSVP Limit -->
+        <% if (event.rsvpLimit != null) { %><br>RSVP Limit: ##/<%= event.rsvpLimit %><% } %>
+        
+        <!-- Description -->
+        <% if (event.description != null) { %><br><%= event.description %><% } %>
+
+
+      </p>
+      
+
+    </div>
+  </main>
+
+  <footer>
+    <% include ./partials/footer %>
+  </footer>
+
+</body>
+</html>
