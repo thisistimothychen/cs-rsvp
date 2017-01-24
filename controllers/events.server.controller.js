@@ -32,6 +32,20 @@ module.exports.update = function(req, res) {
 	});
 };
 
+module.exports.delete = function(req, res) {
+	console.log("ID: " + req.params.id);
+	eventsService.deleteEvent({ _id: req.params.id })
+		.then(function(result) {
+			req.flash('info', 'The event has been deleted.');
+			console.log("Event deleted (controller output).")
+			
+			res.redirect('/');
+		}, function(err) {
+			res.status(400).json(err);
+		});
+};
+
+
 module.exports.search = function(req, res) {
 	eventsService.searchEvents(req.query)
 		.then(function(result) {

@@ -364,6 +364,15 @@ app.post('/event/:id/edit', function(req, res) {
   }, ['Admin', 'Superuser']);
 });
 
+// delete event
+app.post('/event/:id/delete', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    console.log("Deleting event " + req.params.id);
+    eventController.delete(req, res);
+  }, ['Admin', 'Superuser']);
+});
+
+
 
 function getDateTimeStr(mili) {
   console.log(mili);

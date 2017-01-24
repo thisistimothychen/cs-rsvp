@@ -35,6 +35,12 @@ module.exports = function() {
 
 		return mergedEvent.save();
 	}
+	
+	function deleteEvent(query) {
+		return Event.remove(query).exec().then(function(result) {
+			console.log("Remove result: " + result);
+		});
+	}
 
 	function searchEvents(query) {
 		return Event.find(query).sort({startTime: 1}).exec().then(function(result) {
@@ -55,6 +61,7 @@ module.exports = function() {
 	return {
 		createEvent: createEvent,
 		updateEvent: updateEvent,
+		deleteEvent: deleteEvent,
 		searchEvents: searchEvents
 	};
 };
