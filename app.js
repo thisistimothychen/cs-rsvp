@@ -395,8 +395,8 @@ function getDateTimePrettyFormat(mili) {
   if (rawDate.getUTCHours() > 12) {
     AmPm = "PM";
     hours -= 12;
-  } else if (rawDate.getUTCHours() == 12) {
-    AmPm = "PM";
+  } else if (rawDate.getUTCHours() == 0) {
+    hours = 12;
   }
   
   return days[rawDate.getDay()] + " " + months[rawDate.getMonth()] + " " + rawDate.getDate() + ", " + rawDate.getFullYear() + " " + hours + ":" + rawDateStr.substr(14,2) + " " + AmPm;
