@@ -51,7 +51,7 @@
             <label class="col-md-4 control-label" for="endTime">End Time</label>
             <div class="col-md-4">
                   <div class='input-group date' id='datetimepicker2'>
-                      <input id="endTime" name="endTime" type='text' class="form-control" value="<%= (endDateTimeStr) ? endDateTimeStr : '' %>" />
+                      <input id="endTime" name="endTime" type='text' class="form-control" value="<%= (event != null && event.endTime != null) ? endDateTimeStr : '' %>" />
                       <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
                       </span>
