@@ -298,7 +298,7 @@ app.get('/', function(req, res) {
 // profile page
 app.get('/profile', function(req, res) {
   console.log("GET /profile");
-  checkPermissions(req, res, 'profile.ejs', ['User']);
+  checkPermissions(req, res, 'profile.ejs', ['User', 'Admin', 'Superuser']);
 });
 
 // update existing user
@@ -306,7 +306,7 @@ app.post('/profile', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
     console.log("Updating user " + req.session.cas_username);
     userProfileController.update(req, res);
-  }, ['User']);
+  }, ['User', 'Admin', 'Superuser']);
 });
 
 
@@ -315,7 +315,7 @@ app.post('/profile', function(req, res) {
 app.get('/create_event', function(req, res) {
   console.log("GET /create_event");
   // TODO remove 'User' role
-  checkPermissions(req, res, 'event_form.ejs', ['User', 'Admin', 'Superuser']);
+  checkPermissions(req, res, 'event_form.ejs', ['Admin', 'Superuser']);
 });
 
 // create new event
@@ -328,7 +328,6 @@ app.post('/event', function(req, res) {
 
 // show event edit page (admin view)
 app.get('/event/:id/edit', function(req, res) {
-  // TODO remove 'User' role
   checkPermissionsWithCallback(req, res, function(params) {
     Event.findOne({ _id: req.params.id })
     .then(function(event) {
@@ -337,7 +336,7 @@ app.get('/event/:id/edit', function(req, res) {
       params.endDateTimeStr = getDateTimeStr(event.endTime);
       res.render('event_form.ejs', params);
     })
-  }, ['User', 'Admin', 'Superuser']);
+  }, ['Admin', 'Superuser']);
 });
 
 // show event
@@ -353,7 +352,7 @@ app.get('/event/:id', function(req, res) {
       params.sameDate = sameDate;
       res.render('event_show.ejs', params);
     })
-  }, ['User', 'Admin', 'Superuser']);
+  }, []);
 });
 
 // edit existing event
