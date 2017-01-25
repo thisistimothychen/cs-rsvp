@@ -16,7 +16,7 @@
       <h1><%= event.name %></h1>
 
       <p>
-        
+
         <!-- Start/end date and time -->
         <% if (event.endTime == null) { %>
           <!-- No end date specified -->
@@ -28,19 +28,24 @@
           <!-- Different start/end dates -->
           <%= getDateTimePrettyFormat(event.startTime) %> - <%= getDateTimePrettyFormat(event.endTime) %>
         <% } %>
-        
+
         <!-- Location (required) -->
         <br><%= event.location %>
 
         <!-- RSVP Limit -->
-        <% if (event.rsvpLimit != null) { %><br>RSVP Limit: ##/<%= event.rsvpLimit %><% } %>
-        
+        <% var registered = allEvents[i].rsvpUsers.length %>
+        <% if (allEvents[i].rsvpLimit != null) { %>
+          <br>RSVP Limit: <%= registered %>/<%= allEvents[i].rsvpLimit %>
+        <% } else { %>
+          <br>Attendees Registered: <%= registered %> %>
+        <% } %>
+
         <!-- Description -->
         <% if (event.description != null) { %><br><%= event.description %><% } %>
 
 
       </p>
-      
+
 
     </div>
   </main>

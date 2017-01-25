@@ -16,19 +16,19 @@
 			<div class="col-sm-8">
 				<div class="jumbotron">
 					<h1>Upcoming CS Events</h1>
-					
+
 					<section id="list-view">
 
 							<% for(var i=0; i < allEvents.length; i++) { %>
-								
+
 								<!-- Individual event div -->
 								<article id="event-<%= allEvents[i]._id %>">
-								
+
 									<!-- Event Name -->
 									<h3><a href="/event/<%= allEvents[i]._id %>"><%= allEvents[i].name %></a></h3>
-									
+
 									<p>
-									
+
 										<!-- Start/end date and time -->
 										<% if (allEvents[i].endTime == null) { %>
 											<!-- No end date specified -->
@@ -40,13 +40,18 @@
 											<!-- Different start/end dates -->
 											<%= getDateTimePrettyFormat(allEvents[i].startTime) %> - <%= getDateTimePrettyFormat(allEvents[i].endTime) %>
 										<% } %>
-										
+
 										<!-- Location (required) -->
 										<br><%= allEvents[i].location %>
 
 										<!-- RSVP Limit -->
-										<% if (allEvents[i].rsvpLimit != null) { %><br>RSVP Limit: ##/<%= allEvents[i].rsvpLimit %><% } %>
-										
+										<% var registered = allEvents[i].rsvpUsers.length %>
+										<% if (allEvents[i].rsvpLimit != null) { %>
+											<br>RSVP Limit: <%= registered %>/<%= allEvents[i].rsvpLimit %>
+										<% } else { %>
+											<br>Attendees Registered: <%= registered %> %>
+										<% } %>
+
 										<!-- Description -->
 										<% if (allEvents[i].description != null) { %><br><%= allEvents[i].description %><% } %>
 
@@ -63,8 +68,8 @@
 												<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/unrsvp'"><i class="fa fa-calendar-times-o"></i> I'm Not Attending</button>
 											</form>
 										<% } %>
-										
-										
+
+
 										<!-- <button id=<%= "show-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>'"><i class="fa fa-eye"></i> Show Event</button> -->
 									<% } %>
 									<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
@@ -73,12 +78,12 @@
 											<button id=<%= "delete-" + allEvents[i]._id %> data-record-id="<%= allEvents[i]._id %>" data-record-title="<%= allEvents[i].name %>" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i> Delete Event</button>
 										<!-- </form> -->
 									<% } %>
-									
+
 								</article>
-								
+
 							<% } %>
 					</section>
-					
+
 				</div><!-- Jumbotron -->
 			</div><!-- col-sm-8 -->
 			<div class="col-sm-4">
@@ -94,7 +99,7 @@
 	<footer>
 		<% include ./partials/footer %>
 	</footer>
-	
+
 	<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -113,7 +118,7 @@
             </div>
         </div>
     </div>
-	
+
 	<script>
 			$('#confirm-delete').on('click', '.btn-ok', function(e) {
 			    var $modalDiv = $(e.delegateTarget);
