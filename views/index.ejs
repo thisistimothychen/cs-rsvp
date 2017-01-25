@@ -14,59 +14,62 @@
 	<main>
 		<div class="row">
 			<div class="col-sm-8">
-
 				<div class="jumbotron">
 					<h1>Upcoming CS Events</h1>
-
-					<% for(var i=0; i < allEvents.length; i++) { %>
-						
-						<!-- Individual event div -->
-						<article id="event-<%= allEvents[i]._id %>">
-						
-							<!-- Event Name -->
-							<h3><a href="/event/<%= allEvents[i]._id %>"><%= allEvents[i].name %></a></h3>
-							
-							<p>
-							
-								<!-- Start/end date and time -->
-								<% if (allEvents[i].endTime == null) { %>
-									<!-- No end date specified -->
-									<%= getDateTimePrettyFormat(allEvents[i].startTime) %>
-								<% } else if (getDateTimeStr(allEvents[i].startTime).substr(0,10) == getDateTimeStr(allEvents[i].endTime).substr(0,10)) { %>
-									<!-- Same start/end dates -->
-									<%= getDateTimePrettyFormat(allEvents[i].startTime) %> - <%= getDateTimePrettyFormat(allEvents[i].endTime).substr(16) %>
-								<% } else { %>
-									<!-- Different start/end dates -->
-									<%= getDateTimePrettyFormat(allEvents[i].startTime) %> - <%= getDateTimePrettyFormat(allEvents[i].endTime) %>
-								<% } %>
-								
-								<!-- Location (required) -->
-								<br><%= allEvents[i].location %>
-
-								<!-- RSVP Limit -->
-								<% if (allEvents[i].rsvpLimit != null) { %><br>RSVP Limit: ##/<%= allEvents[i].rsvpLimit %><% } %>
-								
-								<!-- Description -->
-								<% if (allEvents[i].description != null) { %><br><%= allEvents[i].description %><% } %>
-
-
-							</p>
-
-							<% if (user != null && user.roles.type.user) {%>
-								<!-- <button id=<%= "show-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>'"><i class="fa fa-eye"></i> Show Event</button> -->
-							<% } %>
-							<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
-								<button id=<%= "edit-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/edit'"><i class="fa fa-edit"></i> Edit Event</button>
-								<!-- <form action="/event/<%= allEvents[i]._id %>/delete" method="POST" display="none" style="display: inline-block"> -->
-									<button id=<%= "delete-" + allEvents[i]._id %> data-record-id="<%= allEvents[i]._id %>" data-record-title="<%= allEvents[i].name %>" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i> Delete Event</button>
-								<!-- </form> -->
-							<% } %>
-							
-						<% } %>
 					
-					</article>
-				</div>
-			</div>
+					<section id="list-view">
+
+							<% for(var i=0; i < allEvents.length; i++) { %>
+								
+								<!-- Individual event div -->
+								<article id="event-<%= allEvents[i]._id %>">
+								
+									<!-- Event Name -->
+									<h3><a href="/event/<%= allEvents[i]._id %>"><%= allEvents[i].name %></a></h3>
+									
+									<p>
+									
+										<!-- Start/end date and time -->
+										<% if (allEvents[i].endTime == null) { %>
+											<!-- No end date specified -->
+											<%= getDateTimePrettyFormat(allEvents[i].startTime) %>
+										<% } else if (getDateTimeStr(allEvents[i].startTime).substr(0,10) == getDateTimeStr(allEvents[i].endTime).substr(0,10)) { %>
+											<!-- Same start/end dates -->
+											<%= getDateTimePrettyFormat(allEvents[i].startTime) %> - <%= getDateTimePrettyFormat(allEvents[i].endTime).substr(16) %>
+										<% } else { %>
+											<!-- Different start/end dates -->
+											<%= getDateTimePrettyFormat(allEvents[i].startTime) %> - <%= getDateTimePrettyFormat(allEvents[i].endTime) %>
+										<% } %>
+										
+										<!-- Location (required) -->
+										<br><%= allEvents[i].location %>
+
+										<!-- RSVP Limit -->
+										<% if (allEvents[i].rsvpLimit != null) { %><br>RSVP Limit: ##/<%= allEvents[i].rsvpLimit %><% } %>
+										
+										<!-- Description -->
+										<% if (allEvents[i].description != null) { %><br><%= allEvents[i].description %><% } %>
+
+
+									</p>
+
+									<% if (user != null && user.roles.type.user) {%>
+										<!-- <button id=<%= "show-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>'"><i class="fa fa-eye"></i> Show Event</button> -->
+									<% } %>
+									<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
+										<button id=<%= "edit-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/edit'"><i class="fa fa-edit"></i> Edit Event</button>
+										<!-- <form action="/event/<%= allEvents[i]._id %>/delete" method="POST" display="none" style="display: inline-block"> -->
+											<button id=<%= "delete-" + allEvents[i]._id %> data-record-id="<%= allEvents[i]._id %>" data-record-title="<%= allEvents[i].name %>" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i> Delete Event</button>
+										<!-- </form> -->
+									<% } %>
+									
+								</article>
+								
+							<% } %>
+					</section>
+					
+				</div><!-- Jumbotron -->
+			</div><!-- col-sm-8 -->
 			<div class="col-sm-4">
 
 				<div class="well">
@@ -93,8 +96,8 @@
                     <p>Do you want to proceed?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger btn-ok">Delete</button>
+									<button type="button" class="btn btn-danger btn-ok">Delete</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
