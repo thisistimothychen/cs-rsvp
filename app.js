@@ -355,6 +355,22 @@ app.get('/event/:id', function(req, res) {
   }, []);
 });
 
+// user rsvp to event
+app.post('/event/:id/rsvp', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    console.log("RSVPing " + req.session.cas_username + " to event " + req.params.id);
+    eventController.userRSVP(req, res);
+  }, ['User', 'Admin', 'Superuser']);
+});
+
+// user unrsvp to event
+app.post('/event/:id/unrsvp', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    console.log("Un-RSVPing " + req.session.cas_username + " from event " + req.params.id);
+    eventController.userUnRSVP(req, res);
+  }, ['User', 'Admin', 'Superuser']);
+});
+
 // edit existing event
 app.post('/event/:id/edit', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {

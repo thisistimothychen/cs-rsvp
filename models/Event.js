@@ -35,7 +35,7 @@ let EventSchema = new GetterSchema({
 		trim: true
 	}],
 	rsvpUsers: [{
-		type: mongoose.Schema.ObjectId,
+		type: String,
 		ref: 'User'
 	}],
 	rsvpLimit: {
@@ -64,6 +64,11 @@ let EventSchema = new GetterSchema({
 		get: util.dateParse
 	},
 	created: {
+		type: Date,
+		default: Date.now,
+		get: util.dateParse
+	},
+	updated: {
 		type: Date,
 		default: Date.now,
 		get: util.dateParse

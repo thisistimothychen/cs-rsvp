@@ -46,6 +46,40 @@ module.exports.delete = function(req, res) {
 };
 
 
+module.exports.userRSVP = function(req, res) {
+	console.log("--Controller output--\n" + "User: " + req.session.cas_username + "\nID: " + req.params.id + "\n--END Controller output--");
+	
+	eventsService.searchEvents({ _id: req.params.id })
+	.then(function(event) {
+		return eventsService.addUserRSVPToEvent(event.elements[0], req.session.cas_username);
+	})
+	.then(function(updatedEvent) {
+		// User has been added to event
+		req.flash("info", "You have RSVP'd to " + updatedEvent.name + ".");
+		res.redirect('/');
+	}, function(err) {
+		res.status(400).json(err);
+	});
+};
+
+
+
+module.exports.userUnRSVP = function(req, res) {
+	eventsService.searchEvents({ _id: req.params.id })
+	.then(function(event) {
+		return eventsService.removeUserRSVPToEvent(event.elements[0], req.session.cas_username);
+	})
+	.then(function(updatedEvent) {
+		// User has been removed from the event
+		console.log(updatedEvent.rsvpUsers);
+		req.flash("info", "You have UnRSVP'd to " + updatedEvent.name + ".");
+		res.redirect('/');
+	}, function(err) {
+		res.status(400).json(err);
+	});
+};
+
+
 module.exports.search = function(req, res) {
 	eventsService.searchEvents(req.query)
 		.then(function(result) {

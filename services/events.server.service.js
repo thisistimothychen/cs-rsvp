@@ -36,6 +36,27 @@ module.exports = function() {
 		return mergedEvent.save();
 	}
 	
+	function addUserRSVPToEvent(event, username) {
+		event.updated = Date.now();
+		
+		// Insert user into event
+		event.rsvpUsers.push(username);
+		
+		return event.save();
+	}
+	
+	function removeUserRSVPToEvent(event, username) {
+		event.updated = Date.now();
+		
+		// Remove user from event using Lodash
+		var updatedArray = _.remove(event.rsvpUsers, function(user) {
+			return user != username;
+		});
+		event.rsvpUsers = updatedArray;
+		
+		return event.save();
+	}
+	
 	function deleteEvent(query) {
 		return Event.remove(query).exec().then(function(result) {
 			console.log("Remove result: " + result);
@@ -62,6 +83,8 @@ module.exports = function() {
 		createEvent: createEvent,
 		updateEvent: updateEvent,
 		deleteEvent: deleteEvent,
-		searchEvents: searchEvents
+		searchEvents: searchEvents,
+		addUserRSVPToEvent: addUserRSVPToEvent,
+		removeUserRSVPToEvent: removeUserRSVPToEvent
 	};
 };

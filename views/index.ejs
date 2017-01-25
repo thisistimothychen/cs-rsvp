@@ -54,6 +54,17 @@
 									</p>
 
 									<% if (user != null && user.roles.type.user) {%>
+										<% if (JSON.stringify(allEvents[i].rsvpUsers).indexOf("\"" + username + "\"") == -1) { %>
+											<form action="/event/<%= allEvents[i]._id %>/rsvp" method="POST" style="display: inline-block">
+												<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/rsvp'"><i class="fa fa-calendar-check-o"></i> I'm Attending</button>
+											</form>
+										<% } else { %>
+											<form action="/event/<%= allEvents[i]._id %>/unrsvp" method="POST" style="display: inline-block">
+												<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/unrsvp'"><i class="fa fa-calendar-times-o"></i> I'm Not Attending</button>
+											</form>
+										<% } %>
+										
+										
 										<!-- <button id=<%= "show-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>'"><i class="fa fa-eye"></i> Show Event</button> -->
 									<% } %>
 									<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
