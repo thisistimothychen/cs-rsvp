@@ -33,9 +33,9 @@
         <br><%= event.location %>
 
         <!-- RSVP Limit -->
-        <% var registered = allEvents[i].rsvpUsers.length %>
-        <% if (allEvents[i].rsvpLimit != null) { %>
-          <br>RSVP Limit: <%= registered %>/<%= allEvents[i].rsvpLimit %>
+        <% var registered = event.rsvpUsers.length %>
+        <% if (event.rsvpLimit != null) { %>
+          <br>RSVP Limit: <%= registered %>/<%= event.rsvpLimit %>
         <% } else { %>
           <br>Attendees Registered: <%= registered %> %>
         <% } %>
