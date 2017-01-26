@@ -47,10 +47,16 @@
 
         <!-- ADMIN SECTION -->
         <% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
-          <h3>RSVP'd Users</h3>
-          <% event.rsvpUsers.forEach(function(user) { %>
-            <%= user %><br>
-          <% }); %>
+          <% if (event.rsvpUsers.length != 0) { %>
+            <h3>RSVP'd Users</h3>
+            <p>
+              <% event.rsvpUsers.forEach(function(user) { %>
+                <%= user %><br>
+              <% }); %>
+            </p>
+          <% } else { %>
+            <p>0 students are currently registered for this event.</p>
+          <% } %>
         <% } %>
 
       </p>
