@@ -78,6 +78,7 @@
 									<% } %>
 									<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
 										<button id=<%= "edit-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/edit'"><i class="fa fa-edit"></i> Edit Event</button>
+										<button id=<%= "duplicate-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/duplicate'"><i class="fa fa-copy"></i> Duplicate Event</button>
 										<!-- <form action="/event/<%= allEvents[i]._id %>/delete" method="POST" display="none" style="display: inline-block"> -->
 											<button id=<%= "delete-" + allEvents[i]._id %> data-record-id="<%= allEvents[i]._id %>" data-record-title="<%= allEvents[i].name %>" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i> Delete Event</button>
 										<!-- </form> -->

@@ -334,6 +334,21 @@ app.get('/event/:id/edit', function(req, res) {
       params.event = event;
       params.startDateTimeStr = getDateTimeStr(event.startTime);
       params.endDateTimeStr = getDateTimeStr(event.endTime);
+      params.duplicate = false;
+      res.render('event_form.ejs', params);
+    })
+  }, ['Admin', 'Superuser']);
+});
+
+// show event edit page (admin view)
+app.get('/event/:id/duplicate', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    Event.findOne({ _id: req.params.id })
+    .then(function(event) {
+      params.event = event;
+      params.startDateTimeStr = getDateTimeStr(event.startTime);
+      params.endDateTimeStr = getDateTimeStr(event.endTime);
+      params.duplicate = true;
       res.render('event_form.ejs', params);
     })
   }, ['Admin', 'Superuser']);
@@ -422,7 +437,7 @@ function getDateTimePrettyFormat(mili) {
   } else if (rawDate.getUTCHours() == 0) {
     hours = 12;
   }
-  
+
   return days[rawDate.getDay()] + " " + months[rawDate.getMonth()] + " " + rawDate.getDate() + ", " + rawDate.getFullYear() + " " + hours + ":" + rawDateStr.substr(14,2) + " " + AmPm;
 }
 

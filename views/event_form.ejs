@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <% var username = username; var user = user; var event = event; var startDateTimeStr = startDateTimeStr; var endDateTimeStr = endDateTimeStr; %>
+  <% var username = username; var user = user; var event = event; var startDateTimeStr = startDateTimeStr; var endDateTimeStr = endDateTimeStr; var duplicate = duplicate; %>
   <% include ./partials/head %>
 </head>
 <body class="container">
@@ -13,7 +13,7 @@
 
   <main>
     <div class="jumbotron">
-      <% if (!event) { %>
+      <% if (!event || duplicate) { %>
         <h1>Create Event</h1>
         <form class="form-horizontal" action="/event" method="POST">
       <% } else { %>
@@ -99,7 +99,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="description">Description</label>
             <div class="col-md-4">
-              <textarea class="form-control" id="description" name="description"><%= (event != null && event.description) ? event.description : '' %></textarea>
+              <textarea class="form-control" id="description" name="description" style="height:150px; resize:vertical;"><%= (event != null && event.description) ? event.description : '' %></textarea>
             </div>
           </div>
 
@@ -142,7 +142,7 @@
           <!-- Button -->
           <div class="form-group">
             <div class="col-md-4 col-md-offset-4">
-              <% if (!event) { %>
+              <% if (!event || duplicate) { %>
                 <button id="submit" name="submit" class="btn btn-default">Create Event</button>
               <% } else { %>
                 <button id="submit" name="submit" class="btn btn-default">Update Event</button>
