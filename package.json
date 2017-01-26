@@ -4,7 +4,7 @@
   "description": "A redesigned student event registration system for the UMD Computer Science Department",
   "repository": {
     "type": "git",
-    "url": "https://github.com/timothychen01/cs-rsvp"
+    "url": "https://github.com/timothychen01/cs-rsvp.git"
   },
   "author": "Timothy Chen and Allen Cheng",
   "license": "MIT",
