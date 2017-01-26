@@ -44,6 +44,15 @@
         <% if (event.description != null) { %><br><%= event.description %><% } %>
 
 
+
+        <!-- ADMIN SECTION -->
+        <% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
+          <h3>RSVP'd Users</h3>
+          <% event.rsvpUsers.forEach(function(user) { %>
+            <%= user %><br>
+          <% }); %>
+        <% } %>
+
       </p>
 
 
