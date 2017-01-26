@@ -1,12 +1,12 @@
 {
-  "name": "hackathon-starter",
-  "version": "4.3.0",
-  "description": "A boilerplate for Node.js web applications",
+  "name": "cs-rsvp",
+  "version": "1.0.0",
+  "description": "A redesigned student event registration system for the UMD Computer Science Department",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/timothychen01/cs-rsvp"
   },
-  "author": "Sahat Yalkabov",
+  "author": "Timothy Chen and Allen Cheng",
   "license": "MIT",
   "scripts": {
     "start": "node app.js",
