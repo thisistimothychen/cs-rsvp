@@ -304,6 +304,14 @@ app.post('/profile', function(req, res) {
   }, ['User', 'Admin', 'Superuser']);
 });
 
+// grant user admin privileges
+app.post('/users/:username/adminify', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    console.log("Upgrading " + req.params.username + " to admin status");
+    userProfileController.adminify(req, res);
+  }, ['Admin', 'Superuser']);
+});
+
 
 
 // view event creation page
@@ -414,7 +422,6 @@ app.get('/users', function(req, res) {
 
 
 function getDateTimeStr(mili) {
-  console.log(mili);
   var rawDate = new Date(mili);
   rawDate.setTime(rawDate - rawDate.getTimezoneOffset()*60*1000);
   var rawDateStr = rawDate.toJSON();
@@ -426,7 +433,6 @@ function getDateTimeStr(mili) {
   }
 
   dateStr = rawDateStr.substr(5,2) + "/" + rawDateStr.substr(8,2) + "/" + rawDateStr.substr(0,4) + " " + rawDateStr.substr(11,5) + " " + AmPm;
-  console.log(dateStr);
   return dateStr;
 }
 

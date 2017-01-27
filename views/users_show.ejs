@@ -35,9 +35,13 @@
                       <td><%= user.firstName %> <%= user.lastName %></td>
                       <td><%= user.username %></td>
                       <% if (user.roles.type.admin) { %>
-                        <td><input type="checkbox" checked data-toggle="toggle" data-on="Admin" data-off="User"></td>
+                        <td data-toggle="modal" data-target="#confirm-changeRole" data-record-title="<%= user.firstName + ' ' + user.lastName %>" data-record-username="<%= user.username %>" data-record-change-to="Non-Admin">
+                          <input type="checkbox" checked data-toggle="toggle" data-on="Admin" data-off="User">
+                        </td>
                       <% } else { %>
-                        <td><input type="checkbox" data-toggle="toggle" data-on="Admin" data-off="User"></td>
+                        <td data-toggle="modal" data-target="#confirm-changeRole" data-record-title="<%= user.firstName + ' ' + user.lastName %>" data-record-username="<%= user.username %>" data-record-change-to="Admin">
+                          <input type="checkbox" data-toggle="toggle" data-on="Admin" data-off="User">
+                        </td>
                       <% } %>
                     </tr>
                   <% }); %>
@@ -54,6 +58,60 @@
   <footer>
     <% include ./partials/footer %>
   </footer>
+  
+  
+  <div class="modal fade" id="confirm-changeRole" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Confirm Change</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You are about to change the role of <b class="title"></b> to <i class="changeTo"></i>.</p>
+                    <p>Do you want to proceed?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger btn-ok">Change</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <script>
+      $('#confirm-changeRole').on('click', '.btn-ok', function(e) {
+          var $modalDiv = $(e.delegateTarget);
+          var username = $(this).data('username');
+          console.log($(this).data());
+          if ($(this).data('changeTo') == "Admin") {
+            $.post('/users/' + username + '/adminify', function(data, status) {
+              console.log("Status: " + status);
+              setTimeout(function() {
+                $modalDiv.modal('hide').removeClass('loading');
+                window.location = "/users";
+              }, 250)
+            });
+          } else {
+            $.post('/users/' + username + '/unadminify', function(data, status) {
+              console.log("Status: " + status);
+              setTimeout(function() {
+                $modalDiv.modal('hide').removeClass('loading');
+                window.location = "/users";
+              }, 250)
+            });
+          }
+          $modalDiv.addClass('loading');
+      });
+      $('#confirm-changeRole').on('show.bs.modal', function(e) {
+          var data = $(e.relatedTarget).data();
+          console.log(data);
+          $('.title', this).text(data.recordTitle);
+          $('.changeTo', this).text(data.recordChangeTo);
+          $('.btn-ok', this).data('username', data.recordUsername);
+          $('.btn-ok', this).data('changeTo', data.recordChangeTo);
+      });
+    </script>
   
 
 </body>

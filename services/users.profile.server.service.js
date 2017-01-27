@@ -33,10 +33,15 @@ module.exports = function() {
 
 	function updateUser(user, newUser) {
 		user.updated = Date.now();
-
 		let mergedUser = _.merge(user, newUser);
-
 		return mergedUser.save();
+	}
+	
+	function adminifyUser(user) {
+		user.updated = Date.now();
+		user.roles.type.admin = true;
+		// console.log(user);
+		return user.save();
 	}
 
 	function searchUsers(query) {
@@ -58,6 +63,7 @@ module.exports = function() {
 	return {
 		createUser: createUser,
 		updateUser: updateUser,
-		searchUsers: searchUsers
+		searchUsers: searchUsers,
+		adminifyUser: adminifyUser
 	};
 };

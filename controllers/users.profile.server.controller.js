@@ -57,15 +57,26 @@ module.exports.update = function(req, res) {
 				// User has been updated
 				console.log('POST updating new user: ' + result);
 				req.flash("info", "Your profile has been updated.");
-
-				// console.log("Previous user: " + oldUser);
-				// console.log("New user: " + result);
-
 				res.redirect("profile");
 			}, function(err) {
 				// res.send("There was a problem updating the user: " + err);
 				res.status(400).json(err);
 			});
+	});
+};
+
+module.exports.adminify = function(req, res) {
+	usersService.searchUsers({username: req.params.username})
+	.then(function(user) {
+		return usersService.adminifyUser(user.elements[0]);
+	})
+	.then(function(result) {
+		// User has been adminified
+		req.flash("info", "The user has been granted administrator privileges.");
+		res.send(200);
+	}, function(err) {
+		// res.send("There was a problem updating the user: " + err);
+		res.status(400).json(err);
 	});
 };
 
