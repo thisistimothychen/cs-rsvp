@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var username = username; var user = user; %>
+  <% include ./partials/head %>
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+</head>
+<body class="container">
+
+  <header>
+    <% include ./partials/flash %>
+    <% include ./partials/header %>
+  </header>
+
+  <main>
+    <div class="jumbotron">
+      <h1>User Management</h1>
+
+
+      <% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
+        <% if (allUsers.length != 0) { %>
+            <table id="users-table" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Student ID</th>
+                  <th colspan="2"></th>
+                </tr>
+              </thead>
+              
+              <tbody>
+                  <% allUsers.forEach(function(user) { %>
+                    <tr>
+                      <td><%= user.firstName %> <%= user.lastName %></td>
+                      <td><%= user.username %></td>
+                      <% if (user.roles.type.admin) { %>
+                        <td><input type="checkbox" checked data-toggle="toggle" data-on="Admin" data-off="User"></td>
+                      <% } else { %>
+                        <td><input type="checkbox" data-toggle="toggle" data-on="Admin" data-off="User"></td>
+                      <% } %>
+                    </tr>
+                  <% }); %>
+              </tbody>
+            </table>
+        <% } else { %>
+          <h3>0 students are currently using this system.</h3>
+        <% } %>
+      <% } %>
+
+    </div>
+  </main>
+
+  <footer>
+    <% include ./partials/footer %>
+  </footer>
+  
+
+</body>
+</html>

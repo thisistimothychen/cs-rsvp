@@ -399,6 +399,20 @@ app.post('/event/:id/delete', function(req, res) {
 
 
 
+// show all users page (admin view)
+app.get('/users', function(req, res) {
+  checkPermissionsWithCallback(req, res, function(params) {
+    User.find({})
+    .then(function(allUsers) {
+      params.allUsers = allUsers;
+      res.render('users_show.ejs', params);
+    })
+  }, ['Admin', 'Superuser']);
+});
+
+
+
+
 function getDateTimeStr(mili) {
   console.log(mili);
   var rawDate = new Date(mili);
