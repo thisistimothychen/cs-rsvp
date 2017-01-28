@@ -73,7 +73,22 @@ module.exports.adminify = function(req, res) {
 	.then(function(result) {
 		// User has been adminified
 		req.flash("info", "The user has been granted administrator privileges.");
-		res.send(200);
+		res.sendStatus(200);
+	}, function(err) {
+		// res.send("There was a problem updating the user: " + err);
+		res.status(400).json(err);
+	});
+};
+
+module.exports.unadminify = function(req, res) {
+	usersService.searchUsers({username: req.params.username})
+	.then(function(user) {
+		return usersService.unadminifyUser(user.elements[0]);
+	})
+	.then(function(result) {
+		// User has been adminified
+		req.flash("info", "Administrator privileges have been revoked from this user.");
+		res.sendStatus(200);
 	}, function(err) {
 		// res.send("There was a problem updating the user: " + err);
 		res.status(400).json(err);

@@ -43,6 +43,13 @@ module.exports = function() {
 		// console.log(user);
 		return user.save();
 	}
+	
+	function unadminifyUser(user) {
+		user.updated = Date.now();
+		user.roles.type.admin = false;
+		// console.log(user);
+		return user.save();
+	}
 
 	function searchUsers(query) {
 		return User.find(query).exec().then(function(result) {
@@ -64,6 +71,7 @@ module.exports = function() {
 		createUser: createUser,
 		updateUser: updateUser,
 		searchUsers: searchUsers,
-		adminifyUser: adminifyUser
+		adminifyUser: adminifyUser,
+		unadminifyUser: unadminifyUser
 	};
 };
