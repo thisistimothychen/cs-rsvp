@@ -39,7 +39,7 @@ module.exports.delete = function(req, res) {
 			req.flash('info', 'The event has been deleted.');
 			console.log("Event deleted (controller output).")
 			
-			res.send(200);
+			res.sendStatus(200);
 		}, function(err) {
 			res.status(400).json(err);
 		});
