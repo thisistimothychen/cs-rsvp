@@ -309,7 +309,7 @@ app.post('/users/:username/adminify', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
     console.log("Upgrading " + req.params.username + " to admin status");
     userProfileController.adminify(req, res);
-  }, ['Admin', 'Superuser']);
+  }, ['Superuser']);
 });
 
 // revoke user admin privileges
@@ -317,7 +317,7 @@ app.post('/users/:username/unadminify', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
     console.log("Downgrading " + req.params.username + " to regular user status");
     userProfileController.unadminify(req, res);
-  }, ['Admin', 'Superuser']);
+  }, ['Superuser']);
 });
 
 

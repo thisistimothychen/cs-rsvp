@@ -7,7 +7,9 @@
 
 				<% if (username != null && user != null && user.roles.type.admin == true) { %>
 					<li><a href="/create_event">Create Event</a></li>
-					<li><a href="/users">User Management</a></li>
+					<% if (user.roles.type.superuser == true || user.roles.type.admin == true) { %>
+						<li><a href="/users">User Management</a></li>
+					<% } %>
 				<% } %>
 
 				<% if (username != null || user != null) { %>

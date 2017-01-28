@@ -25,24 +25,50 @@
                 <tr>
                   <th>Name</th>
                   <th>Student ID</th>
-                  <th colspan="2"></th>
+                  <% if (user.roles.type.superuser) { %>
+                    <th colspan="1"></th>
+                  <% } else { %>
+                    <th>User Role</th>
+                  <% } %>
                 </tr>
               </thead>
               
               <tbody>
-                  <% allUsers.forEach(function(user) { %>
+                  <% allUsers.forEach(function(userI) { %>
                     <tr>
-                      <td><%= user.firstName %> <%= user.lastName %></td>
-                      <td><%= user.username %></td>
-                      <% if (user.roles.type.admin) { %>
-                        <td data-toggle="modal" data-target="#confirm-changeRole" data-record-title="<%= user.firstName + ' ' + user.lastName %>" data-record-username="<%= user.username %>" data-record-change-to="Non-Admin">
-                          <input type="checkbox" checked data-toggle="toggle" data-on="Admin" data-off="User">
-                        </td>
+                      <td><%= userI.firstName %> <%= userI.lastName %></td>
+                      <td><%= userI.username %></td>
+                      
+                      <% if (user.roles.type.superuser) { %>
+                        <% if (user.username != userI.username) { %>
+                            <% if (userI.roles.type.admin) { %>
+                              <td data-toggle="modal" data-target="#confirm-changeRole" data-record-title="<%= userI.firstName + ' ' + userI.lastName %>" data-record-username="<%= userI.username %>" data-record-change-to="Non-Admin">
+                                <input id="<%= userI.username %>-role-toggle" type="checkbox" checked data-toggle="toggle" data-on="Admin" data-off="User">
+                              </td>
+                            <% } else { %>
+                              <td data-toggle="modal" data-target="#confirm-changeRole" data-record-title="<%= userI.firstName + ' ' + userI.lastName %>" data-record-username="<%= userI.username %>" data-record-change-to="Admin">
+                                <input id="<%= userI.username %>-role-toggle" type="checkbox" data-toggle="toggle" data-on="Admin" data-off="User">
+                              </td>
+                            <% } %>
+                        <% } else { %>
+                            <% if (userI.roles.type.admin) { %>
+                              <td>
+                                <input id="<%= userI.username %>-role-toggle" type="checkbox" checked data-toggle="toggle" data-on="Admin" data-off="User" disabled>
+                              </td>
+                            <% } else { %>
+                              <td>
+                                <input id="<%= userI.username %>-role-toggle" type="checkbox" data-toggle="toggle" data-on="Admin" data-off="User" disabled>
+                              </td>
+                            <% } %>
+                        <% } %>
                       <% } else { %>
-                        <td data-toggle="modal" data-target="#confirm-changeRole" data-record-title="<%= user.firstName + ' ' + user.lastName %>" data-record-username="<%= user.username %>" data-record-change-to="Admin">
-                          <input type="checkbox" data-toggle="toggle" data-on="Admin" data-off="User">
-                        </td>
+                        <% if (userI.roles.type.admin) { %>
+                          <td>Admin</td>
+                        <% } else { %>
+                          <td>User</td>
+                        <% } %>
                       <% } %>
+                      
                     </tr>
                   <% }); %>
               </tbody>
