@@ -99,7 +99,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-danger btn-ok">Change</button>
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -129,13 +129,31 @@
           }
           $modalDiv.addClass('loading');
       });
+      
+      $("#confirm-changeRole").on("hidden.bs.modal", function (e) {
+        var id = "#" + data.recordUsername + "-role-toggle";
+        
+        console.log(data.recordChangeTo);
+        
+        if (data.recordChangeTo == "Admin") {
+          $(id).parent().addClass('btn-default');
+          $(id).parent().addClass('off');
+          $(id).parent().removeClass('btn-primary');
+        } else {
+          $(id).parent().removeClass('off');
+          $(id).parent().addClass('btn-primary');
+          $(id).parent().removeClass('btn-default');
+        }
+      });
+      
       $('#confirm-changeRole').on('show.bs.modal', function(e) {
-          var data = $(e.relatedTarget).data();
-          console.log(data);
+          data = $(e.relatedTarget).data();
           $('.title', this).text(data.recordTitle);
           $('.changeTo', this).text(data.recordChangeTo);
           $('.btn-ok', this).data('username', data.recordUsername);
           $('.btn-ok', this).data('changeTo', data.recordChangeTo);
+          $('.btn-cancel', this).data('username', data.recordUsername);
+          $('.btn-cancel', this).data('changeTo', data.recordChangeTo);
       });
     </script>
   
