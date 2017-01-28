@@ -37,7 +37,7 @@ module.exports.create = function(req, res) {
 module.exports.update = function(req, res) {
 	usersService.searchUsers({username: req.session.cas_username})
 	.then(function(oldUser) {
-		usersService.updateUser(oldUser.elements[0], {
+		return usersService.updateUser(oldUser.elements[0], {
 		    firstName: req.body.firstName,
 		    lastName: req.body.lastName,
 		  	username: req.session.cas_username,
@@ -52,16 +52,16 @@ module.exports.update = function(req, res) {
 		  	// resume:
 		  	major: 'Undefined',
 		  	class: 'Undefined'
-		  })
-			.then(function(result) {
-				// User has been updated
-				console.log('POST updating new user: ' + result);
-				req.flash("info", "Your profile has been updated.");
-				res.redirect("profile");
-			}, function(err) {
-				// res.send("There was a problem updating the user: " + err);
-				res.status(400).json(err);
-			});
+		  });
+	})
+	.then(function(result) {
+		// User has been updated
+		console.log('POST updating new user: ' + result);
+		req.flash("info", "Your profile has been updated.");
+		res.redirect("profile");
+	}, function(err) {
+		// res.send("There was a problem updating the user: " + err);
+		res.status(400).json(err);
 	});
 };
 
