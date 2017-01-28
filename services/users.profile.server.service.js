@@ -37,18 +37,12 @@ module.exports = function() {
 		return mergedUser.save();
 	}
 	
-	function adminifyUser(user) {
-		user.updated = Date.now();
-		user.roles.type.admin = true;
-		// console.log(user);
-		return user.save();
+	function adminifyUser(username) {
+        return User.findOneAndUpdate({username: username}, {$set: {'updated': Date.now(), 'roles.type.admin': true}});
 	}
-	
-	function unadminifyUser(user) {
-		user.updated = Date.now();
-		user.roles.type.admin = false;
-		// console.log(user);
-		return user.save();
+
+	function unadminifyUser(username) {
+		return User.findOneAndUpdate({username: username}, {$set: {'updated': Date.now(), 'roles.type.admin': false}});
 	}
 
 	function searchUsers(query) {

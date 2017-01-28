@@ -36,63 +36,57 @@ module.exports.create = function(req, res) {
 
 module.exports.update = function(req, res) {
 	usersService.searchUsers({username: req.session.cas_username})
-	.then(function(oldUser) {
-		return usersService.updateUser(oldUser.elements[0], {
-		    firstName: req.body.firstName,
-		    lastName: req.body.lastName,
-		  	username: req.session.cas_username,
-		  	email: req.body.email,
-		  	roles: {
-		  		type: {
-		  			user: true,
-		  			admin: false,
-		  			superuser: false
-		  		}
-		  	},
-		  	// resume:
-		  	major: 'Undefined',
-		  	class: 'Undefined'
-		  });
-	})
-	.then(function(result) {
-		// User has been updated
-		console.log('POST updating new user: ' + result);
-		req.flash("info", "Your profile has been updated.");
-		res.redirect("profile");
-	}, function(err) {
-		// res.send("There was a problem updating the user: " + err);
-		res.status(400).json(err);
-	});
+		.then(function(oldUser) {
+			return usersService.updateUser(oldUser.elements[0], {
+				firstName: req.body.firstName,
+				lastName: req.body.lastName,
+				username: req.session.cas_username,
+				email: req.body.email,
+				roles: {
+					type: {
+						user: true,
+						admin: false,
+						superuser: false
+					}
+				},
+				// resume:
+				major: 'Undefined',
+				class: 'Undefined'
+			  });
+		})
+		.then(function(result) {
+			// User has been updated
+			console.log('POST updating new user: ' + result);
+			req.flash("info", "Your profile has been updated.");
+			res.redirect("profile");
+		}, function(err) {
+			// res.send("There was a problem updating the user: " + err);
+			res.status(400).json(err);
+		});
 };
 
 module.exports.adminify = function(req, res) {
-	usersService.searchUsers({username: req.params.username})
-	.then(function(user) {
-		return usersService.adminifyUser(user.elements[0]);
-	})
-	.then(function(result) {
-		// User has been adminified
-		req.flash("info", "The user has been granted administrator privileges.");
-		res.sendStatus(200);
-	}, function(err) {
-		// res.send("There was a problem updating the user: " + err);
-		res.status(400).json(err);
-	});
+	usersService.adminifyUser(req.params.username)
+		.then(function(result) {
+			// User has been adminified
+			req.flash("info", "The user has been granted administrator privileges.");
+			res.sendStatus(200);
+		}, function(err) {
+			// res.send("There was a problem updating the user: " + err);
+			res.status(400).json(err);
+		});
 };
 
 module.exports.unadminify = function(req, res) {
-	usersService.searchUsers({username: req.params.username})
-	.then(function(user) {
-		return usersService.unadminifyUser(user.elements[0]);
-	})
-	.then(function(result) {
-		// User has been adminified
-		req.flash("info", "Administrator privileges have been revoked from this user.");
-		res.sendStatus(200);
-	}, function(err) {
-		// res.send("There was a problem updating the user: " + err);
-		res.status(400).json(err);
-	});
+	usersService.unadminifyUser(req.params.username)
+		.then(function(result) {
+			// User has been adminified
+			req.flash("info", "Administrator privileges have been revoked from this user.");
+			res.sendStatus(200);
+		}, function(err) {
+			// res.send("There was a problem updating the user: " + err);
+			res.status(400).json(err);
+		});
 };
 
 module.exports.search = function(req, res) {
