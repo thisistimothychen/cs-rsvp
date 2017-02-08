@@ -6,7 +6,21 @@ let path = require('path'),
 	eventsService = require(path.resolve('./services/events.server.service.js'))(),
 	Event = require(path.resolve('./models/Event'));
 
+function splitCSVString(req) {
+	if (req.body.sponsors) {
+		req.body.sponsors = req.body.sponsors.split(/[\s,]+/);
+	}
+	if (req.body.major) {
+		req.body.major = req.body.major.split(/[\s,]+/);
+	}
+	if (req.body.tags) {
+		req.body.tags = req.body.tags.split(/[\s,]+/);
+	}
+}
+
 module.exports.create = function(req, res) {
+	splitCSVString(req);
+
 	eventsService.createEvent(req.body)
 		.then(function(event) {
 			req.flash('info', 'The event has been created.');
@@ -17,6 +31,8 @@ module.exports.create = function(req, res) {
 };
 
 module.exports.update = function(req, res) {
+	splitCSVString(req);
+	
 	eventsService.searchEvents({ _id: req.params.id })
 	.then(function(oldEvent) {
 		return eventsService.updateEvent(oldEvent.elements[0], req.body);
