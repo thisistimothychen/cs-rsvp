@@ -34,18 +34,18 @@ module.exports.update = function(req, res) {
 	splitCSVString(req);
 
 	eventsService.searchEvents({ _id: req.params.id })
-	.then(function(oldEvent) {
-		return eventsService.updateEvent(oldEvent.elements[0], req.body);
-	})
-	.then(function(updatedEvent) {
-		// Event has been updated
-		console.log('POST updating event to: ' + updatedEvent);
-		req.flash("info", "Event has been updated.");
+		.then(function(oldEvent) {
+			return eventsService.updateEvent(oldEvent.elements[0], req.body);
+		})
+		.then(function(updatedEvent) {
+			// Event has been updated
+			console.log('POST updating event to: ' + updatedEvent);
+			req.flash("info", "Event has been updated.");
 
-		res.redirect(`/event/${req.params.id}/edit`);
-	}, function(err) {
-		res.status(400).json(err);
-	});
+			res.redirect(`/event/${req.params.id}/edit`);
+		}, function(err) {
+			res.status(400).json(err);
+		});
 };
 
 module.exports.delete = function(req, res) {
@@ -66,33 +66,33 @@ module.exports.userRSVP = function(req, res) {
 	console.log("--Controller output--\n" + "User: " + req.session.cas_username + "\nID: " + req.params.id + "\n--END Controller output--");
 	
 	eventsService.searchEvents({ _id: req.params.id })
-	.then(function(event) {
-		return eventsService.addUserRSVPToEvent(event.elements[0], req.session.cas_username);
-	})
-	.then(function(updatedEvent) {
-		// User has been added to event
-		req.flash("info", "You have RSVP'd to " + updatedEvent.name + ".");
-		res.redirect('/');
-	}, function(err) {
-		res.status(400).json(err);
-	});
+		.then(function(event) {
+			return eventsService.addUserRSVPToEvent(event.elements[0], req.session.cas_username);
+		})
+		.then(function(updatedEvent) {
+			// User has been added to event
+			req.flash("info", "You have RSVP'd to " + updatedEvent.name + ".");
+			res.redirect('/');
+		}, function(err) {
+			res.status(400).json(err);
+		});
 };
 
 
 
 module.exports.userUnRSVP = function(req, res) {
 	eventsService.searchEvents({ _id: req.params.id })
-	.then(function(event) {
-		return eventsService.removeUserRSVPToEvent(event.elements[0], req.session.cas_username);
-	})
-	.then(function(updatedEvent) {
-		// User has been removed from the event
-		console.log(updatedEvent.rsvpUsers);
-		req.flash("info", "You have UnRSVP'd to " + updatedEvent.name + ".");
-		res.redirect('/');
-	}, function(err) {
-		res.status(400).json(err);
-	});
+		.then(function(event) {
+			return eventsService.removeUserRSVPToEvent(event.elements[0], req.session.cas_username);
+		})
+		.then(function(updatedEvent) {
+			// User has been removed from the event
+			console.log(updatedEvent.rsvpUsers);
+			req.flash("info", "You have UnRSVP'd to " + updatedEvent.name + ".");
+			res.redirect('/');
+		}, function(err) {
+			res.status(400).json(err);
+		});
 };
 
 
