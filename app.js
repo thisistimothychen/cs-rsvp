@@ -280,13 +280,13 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
 app.get('/', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
     eventsService.searchEvents({})
-    .then(function(allEvents) {
-      params.allEvents = allEvents.elements;
-      params.getDateTimeStr = getDateTimeStr;
-      params.getDateTimePrettyFormat = getDateTimePrettyFormat;
-      params.sameDate = sameDate;
-      res.render('index.ejs', params);
-    })
+      .then(function(allEvents) {
+        params.allEvents = allEvents.elements;
+        params.getDateTimeStr = getDateTimeStr;
+        params.getDateTimePrettyFormat = getDateTimePrettyFormat;
+        params.sameDate = sameDate;
+        res.render('index.ejs', params);
+      });
   }, []);
 });
 
@@ -341,13 +341,13 @@ app.post('/event', function(req, res) {
 app.get('/event/:id/edit', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
     Event.findOne({ _id: req.params.id })
-    .then(function(event) {
-      params.event = event;
-      params.startDateTimeStr = getDateTimeStr(event.startTime);
-      params.endDateTimeStr = getDateTimeStr(event.endTime);
-      params.duplicate = false;
-      res.render('event_form.ejs', params);
-    })
+      .then(function(event) {
+        params.event = event;
+        params.startDateTimeStr = getDateTimeStr(event.startTime);
+        params.endDateTimeStr = getDateTimeStr(event.endTime);
+        params.duplicate = false;
+        res.render('event_form.ejs', params);
+      });
   }, ['Admin', 'Superuser']);
 });
 
@@ -355,13 +355,13 @@ app.get('/event/:id/edit', function(req, res) {
 app.get('/event/:id/duplicate', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
     Event.findOne({ _id: req.params.id })
-    .then(function(event) {
-      params.event = event;
-      params.startDateTimeStr = getDateTimeStr(event.startTime);
-      params.endDateTimeStr = getDateTimeStr(event.endTime);
-      params.duplicate = true;
-      res.render('event_form.ejs', params);
-    })
+      .then(function(event) {
+        params.event = event;
+        params.startDateTimeStr = getDateTimeStr(event.startTime);
+        params.endDateTimeStr = getDateTimeStr(event.endTime);
+        params.duplicate = true;
+        res.render('event_form.ejs', params);
+      });
   }, ['Admin', 'Superuser']);
 });
 
@@ -369,15 +369,15 @@ app.get('/event/:id/duplicate', function(req, res) {
 app.get('/event/:id', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
     Event.findOne({ _id: req.params.id })
-    .then(function(event) {
-      params.event = event;
-      params.startDateTimeStr = getDateTimeStr(event.startTime);
-      params.endDateTimeStr = getDateTimeStr(event.endTime);
-      params.getDateTimeStr = getDateTimeStr;
-      params.getDateTimePrettyFormat = getDateTimePrettyFormat;
-      params.sameDate = sameDate;
-      res.render('event_show.ejs', params);
-    })
+      .then(function(event) {
+        params.event = event;
+        params.startDateTimeStr = getDateTimeStr(event.startTime);
+        params.endDateTimeStr = getDateTimeStr(event.endTime);
+        params.getDateTimeStr = getDateTimeStr;
+        params.getDateTimePrettyFormat = getDateTimePrettyFormat;
+        params.sameDate = sameDate;
+        res.render('event_show.ejs', params);
+      });
   }, []);
 });
 
