@@ -18,6 +18,7 @@ const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const multer = require('multer');
+const _ = require('lodash');
 
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
@@ -279,12 +280,26 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
 // index page
 app.get('/', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
-    eventsService.searchEvents({})
+    let search = {};
+    if (req.query.text) {
+      search.$text = { $search: req.query.text };
+    }
+
+    if (req.query.tags) {
+      search['tags'] = { $all: req.query.tags.split(',')};
+    }
+
+    eventsService.searchEvents(search)
       .then(function(allEvents) {
         params.allEvents = allEvents.elements;
         params.getDateTimeStr = getDateTimeStr;
         params.getDateTimePrettyFormat = getDateTimePrettyFormat;
         params.sameDate = sameDate;
+
+        // get list of all unique tags
+        let tagsOnly = params.allEvents.map((event) => event.tags);
+        params.tags = _.uniq(_.flatten(tagsOnly));
+
         res.render('index.ejs', params);
       });
   }, []);
