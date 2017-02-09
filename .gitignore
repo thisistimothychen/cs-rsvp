@@ -4,3 +4,6 @@
 
 # nodejs modules
 node_modules/
+
+# file uploads
+uploads/
