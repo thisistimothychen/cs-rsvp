@@ -54,7 +54,14 @@ let UserSchema = new GetterSchema({
 		}
 	},
 	resume: {
-    	type: String
+  	    type: {
+  	    	filepath: {
+  	    		type: String
+	        },
+	        originalName: {
+  	    		type: String
+	        }
+        }
 	},
 	major: {
     	type: String,

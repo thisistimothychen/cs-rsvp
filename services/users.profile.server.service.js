@@ -34,6 +34,7 @@ module.exports = function() {
 	function updateUser(user, newUser) {
 		user.updated = Date.now();
 		let mergedUser = _.merge(user, newUser);
+		mergedUser.markModified('resume');
 		return mergedUser.save();
 	}
 	
