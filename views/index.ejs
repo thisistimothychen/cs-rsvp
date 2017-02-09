@@ -94,9 +94,35 @@
 			<div class="col-sm-4">
 
 				<div class="well">
-					<h3>This section used for calendar view. To be programmed later.</h3>
-				</div>
+					<h2>Filter Events</h2>
+					<form action="/" method="GET">
+						<fieldset>
+							<!-- Text input-->
+							<div class="form-group">
+								<label class="control-label" for="text">Search events:</label>
+								<div>
+									<input id="searchinput" name="text" type="text" placeholder="" class="form-control input-md">
 
+								</div>
+							</div>
+
+							<!-- Select Multiple -->
+							<div class="form-group">
+								<label class="control-label" for="tags">Filter by tag:</label>
+								<div>
+									<select id="tagselect" name="tags" class="form-control" multiple="multiple">
+										<% for (let i=0; i < tags.length; i++) { %>
+											<option value="<%= tags[i] %>"><%= tags[i] %></option>
+										<% }%>
+									</select>
+								</div>
+							</div>
+
+							<!-- Button -->
+							<button id="searchsubmit" name="searchsubmit" class="btn btn-primary">Filter</button>
+						</fieldset>
+					</form>
+				</div>
 			</div>
 		</div>
 	</main>

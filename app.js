@@ -286,7 +286,11 @@ app.get('/', function(req, res) {
     }
 
     if (req.query.tags) {
-      search['tags'] = { $all: req.query.tags.split(',')};
+      if (typeof req.query.tags === 'string') {
+        search['tags'] = { $all: [req.query.tags]};
+      } else {
+        search['tags'] = { $all: req.query.tags.split(',')};
+      }
     }
 
     eventsService.searchEvents(search)
