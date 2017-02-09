@@ -19,6 +19,7 @@ const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const multer = require('multer');
 const _ = require('lodash');
+const q = require('q');
 
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
@@ -293,19 +294,21 @@ app.get('/', function(req, res) {
       }
     }
 
-    eventsService.searchEvents(search)
-      .then(function(allEvents) {
-        params.allEvents = allEvents.elements;
-        params.getDateTimeStr = getDateTimeStr;
-        params.getDateTimePrettyFormat = getDateTimePrettyFormat;
-        params.sameDate = sameDate;
+    let filteredEventsPromise = eventsService.searchEvents(search);
+    let tagsPromise = eventsService.searchEvents({}, {tags: 1});
 
-        // get list of all unique tags
-        let tagsOnly = params.allEvents.map((event) => event.tags);
-        params.tags = _.uniq(_.flatten(tagsOnly));
+    q.allSettled([filteredEventsPromise, tagsPromise]).spread((filteredEvents, tags) => {
+	    params.allEvents = filteredEvents.value.elements;
+	    params.getDateTimeStr = getDateTimeStr;
+	    params.getDateTimePrettyFormat = getDateTimePrettyFormat;
+	    params.sameDate = sameDate;
 
-        res.render('index.ejs', params);
-      });
+	    // get list of all unique tags
+	    let tagsOnly = tags.value.elements.map((event) => event.tags);
+	    params.tags = _.uniq(_.flatten(tagsOnly));
+
+	    res.render('index.ejs', params);
+    });
   }, []);
 });
 
@@ -316,7 +319,9 @@ app.get('/profile', function(req, res) {
 });
 
 // update existing user
-app.post('/profile', function(req, res) {
+app.post('/profile', upload.single('resume'), function(req, res) {
+  console.log(req.body);
+  console.log(req.file);
   checkPermissionsWithCallback(req, res, function(params) {
     console.log("Updating user " + req.session.cas_username);
     userProfileController.update(req, res);
