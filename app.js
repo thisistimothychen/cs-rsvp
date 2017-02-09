@@ -320,8 +320,6 @@ app.get('/profile', function(req, res) {
 
 // update existing user
 app.post('/profile', upload.single('resume'), function(req, res) {
-  console.log(req.body);
-  console.log(req.file);
   checkPermissionsWithCallback(req, res, function(params) {
     console.log("Updating user " + req.session.cas_username);
     userProfileController.update(req, res);
