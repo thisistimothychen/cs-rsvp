@@ -161,6 +161,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
           userProfileController.create(req, res);
         } else {
           console.log("Found user");
+          user.lastLogin = Date.now();
           res.render(pageToRender, {user: user, username: user.username});
           return;
         }
@@ -182,6 +183,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
           // res.render('profile.ejs', {user: user, username: req.session.cas_username});
         } else {
           console.log("Found user");
+          user.lastLogin = Date.now();
 
           // User has been created already; check permissions
           for (var i = 0; i < roles.length; i++) {
@@ -233,6 +235,7 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
           userProfileController.create(req, res);
         } else {
           console.log("Found user");
+          user.lastLogin = Date.now();
           callback({user: user, username: user.username});
         }
       });
@@ -253,6 +256,7 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
           userProfileController.create(req, res);
         } else {
           console.log("Found user");
+          user.lastLogin = Date.now();
 
           // User has been created already; check permissions
           for (var i = 0; i < roles.length; i++) {
