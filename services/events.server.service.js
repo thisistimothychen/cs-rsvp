@@ -32,6 +32,18 @@ module.exports = function() {
 		event.updated = Date.now();
 
 		let mergedEvent = _.merge(event, newEvent);
+		if (newEvent.tags) {
+			mergedEvent.markModified('tags');
+			mergedEvent.tags = newEvent.tags;
+		}
+		if (newEvent.sponsors) {
+			mergedEvent.markModified('sponsors');
+			mergedEvent.sponsors = newEvent.sponsors;
+		}
+		if (newEvent.major) {
+			mergedEvent.markModified('major');
+			mergedEvent.major = newEvent.major;
+		}
 
 		return mergedEvent.save();
 	}

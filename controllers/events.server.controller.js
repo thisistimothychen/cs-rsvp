@@ -8,13 +8,13 @@ let path = require('path'),
 
 function splitCSVString(req) {
 	if (req.body.sponsors) {
-		req.body.sponsors = req.body.sponsors.split(/,\s+/);
+		req.body.sponsors = req.body.sponsors.split(/,\s*/);
 	}
 	if (req.body.major) {
-		req.body.major = req.body.major.split(/,\s+/);
+		req.body.major = req.body.major.split(/,\s*/);
 	}
 	if (req.body.tags) {
-		req.body.tags = req.body.tags.split(/,\s+/);
+		req.body.tags = req.body.tags.split(/,\s*/);
 	}
 }
 
