@@ -118,6 +118,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 // Moment.js
 let moment = require('moment');
@@ -291,10 +292,10 @@ app.get('/', function(req, res) {
     }
 
     if (req.query.tags) {
-      if (typeof req.query.tags !== 'string') {
+      if (typeof req.query.tags === 'string') {
         search['tags'] = { $all: [req.query.tags]};
       } else {
-        search['tags'] = { $all: req.query.tags.split(',')};
+        search['tags'] = { $all: req.query.tags };
       }
     }
 
