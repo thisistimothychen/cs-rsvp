@@ -327,14 +327,12 @@ app.post('/profile', upload.single('resume'), function(req, res) {
 });
 
 app.get('/download_resume', function(req, res) {
-  checkPermissionsWithCallback(req, res, (params) => {
-	  User.findOne({username: req.session.cas_username}, function(err, user) {
-	    if (user.resume) {
-	      res.download(user.resume.type.filepath, user.resume.type.originalName);
-        } else {
-	      res.status(400).json('No resume!');
-        }
-	  });
+  checkPermissionsWithCallback(req, res, function(params) {
+	  if (params.user.resume) {
+      res.download(params.user.resume.type.filepath, params.user.resume.type.originalName);
+    } else {
+      res.status(400).json('No resume!');
+    }
   }, ['User']);
 });
 
