@@ -48,7 +48,7 @@
             <label class="col-md-4 control-label">Resume</label>
             <div class="col-md-4">
               <input id="resume" name="resume" class="input-file" type="file" style="margin-top: 0.5em;">
-              <span class="help-block">Currently uploaded: <%= (user && user.resume) ? user.resume.type.originalName : 'None' %><br> (Optional) By uploading your resume, you are giving permission for the UMD CS Department to send your resume to companies.</span>
+              <span class="help-block">Currently uploaded: <a href="/download_resume"><%= (user && user.resume) ? user.resume.type.originalName : 'None' %></a><br> (Optional) By uploading your resume, you are giving permission for the UMD CS Department to send your resume to companies.</span>
             </div>
           </div>
 

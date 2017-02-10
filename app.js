@@ -326,6 +326,18 @@ app.post('/profile', upload.single('resume'), function(req, res) {
   }, ['User', 'Admin', 'Superuser']);
 });
 
+app.get('/download_resume', function(req, res) {
+  checkPermissionsWithCallback(req, res, (params) => {
+	  User.findOne({username: req.session.cas_username}, function(err, user) {
+	    if (user.resume) {
+	      res.download(user.resume.type.filepath, user.resume.type.originalName);
+        } else {
+	      res.status(400).json('No resume!');
+        }
+	  });
+  }, ['User']);
+});
+
 // grant user admin privileges
 app.post('/users/:username/adminify', function(req, res) {
   checkPermissionsWithCallback(req, res, function(params) {
