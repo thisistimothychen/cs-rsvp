@@ -288,10 +288,10 @@ app.get('/', function(req, res) {
     }
 
     if (req.query.tags) {
-      if (typeof req.query.tags !== 'string') {
+      if (typeof req.query.tags === 'string') {
         search['tags'] = { $all: [req.query.tags]};
       } else {
-        search['tags'] = { $all: req.query.tags.split(',')};
+        search['tags'] = { $all: req.query.tags };
       }
     }
 
