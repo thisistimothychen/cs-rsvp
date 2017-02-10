@@ -120,7 +120,7 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
 // Moment.js
-var moment = require('moment');
+let moment = require('moment');
 moment().format();
 
 
@@ -203,7 +203,7 @@ let checkPermissions = function(req, res, pageToRender, roles) {
       res.redirect('/cas_login');
     }
   }
-}
+};
 
 
 
@@ -274,7 +274,7 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
       res.redirect('/cas_login');
     }
   }
-}
+};
 
 
 
