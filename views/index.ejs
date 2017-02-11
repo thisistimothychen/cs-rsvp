@@ -19,74 +19,98 @@
 
 					<section id="list-view">
 
-							<% for(var i=0; i < allEvents.length; i++) { %>
+						<% for(var i=0; i < allEvents.length; i++) { %>
+							<!-- Individual event div -->
+							<article id="event-<%= allEvents[i]._id %>">
 
-								<!-- Individual event div -->
-								<article id="event-<%= allEvents[i]._id %>">
+								<!-- Event Name -->
+								<h3><a href="/event/<%= allEvents[i]._id %>"><%= allEvents[i].name %></a></h3>
 
-									<!-- Event Name -->
-									<h3><a href="/event/<%= allEvents[i]._id %>"><%= allEvents[i].name %></a></h3>
+								<p>
 
-									<p>
+									<!-- Start/end date and time -->
+									<% if (allEvents[i].endTime == null) { %>
+										<!-- No end date specified -->
+										<%= getDateTimePrettyFormat(allEvents[i].startTime) %>
+									<% } else if (getDateTimeStr(allEvents[i].startTime).substr(0,10) == getDateTimeStr(allEvents[i].endTime).substr(0,10)) { %>
+										<!-- Same start/end dates -->
+										<%= getDateTimePrettyFormat(allEvents[i].startTime) %> - <%= getDateTimePrettyFormat(allEvents[i].endTime).substr(16) %>
+									<% } else { %>
+										<!-- Different start/end dates -->
+										<%= getDateTimePrettyFormat(allEvents[i].startTime) %> - <%= getDateTimePrettyFormat(allEvents[i].endTime) %>
+									<% } %>
 
-										<!-- Start/end date and time -->
-										<% if (allEvents[i].endTime == null) { %>
-											<!-- No end date specified -->
-											<%= getDateTimePrettyFormat(allEvents[i].startTime) %>
-										<% } else if (getDateTimeStr(allEvents[i].startTime).substr(0,10) == getDateTimeStr(allEvents[i].endTime).substr(0,10)) { %>
-											<!-- Same start/end dates -->
-											<%= getDateTimePrettyFormat(allEvents[i].startTime) %> - <%= getDateTimePrettyFormat(allEvents[i].endTime).substr(16) %>
-										<% } else { %>
-											<!-- Different start/end dates -->
-											<%= getDateTimePrettyFormat(allEvents[i].startTime) %> - <%= getDateTimePrettyFormat(allEvents[i].endTime) %>
-										<% } %>
+									<!-- Location (required) -->
+									<br><%= allEvents[i].location %>
 
-										<!-- Location (required) -->
-										<br><%= allEvents[i].location %>
+									<!-- RSVP Limit -->
+									<% var registered = allEvents[i].rsvpUsers.length %>
+									<% if (allEvents[i].rsvpLimit != null) { %>
+										<br>RSVP Limit: <%= registered %>/<%= allEvents[i].rsvpLimit %>
+									<% } else { %>
+										<br>Attendees Registered: <%= registered %> %>
+									<% } %>
 
-										<!-- RSVP Limit -->
-										<% var registered = allEvents[i].rsvpUsers.length %>
-										<% if (allEvents[i].rsvpLimit != null) { %>
-											<br>RSVP Limit: <%= registered %>/<%= allEvents[i].rsvpLimit %>
-										<% } else { %>
-											<br>Attendees Registered: <%= registered %> %>
-										<% } %>
-
-										<!-- Description -->
-										<% if (allEvents[i].description != null) { %><br><%= allEvents[i].description %><% } %>
+									<!-- Description -->
+									<% if (allEvents[i].description != null) { %><br><%= allEvents[i].description %><% } %>
 
 
-									</p>
+								</p>
 
-									<% if (user != null && user.roles.type.user) {%>
-										<% if (JSON.stringify(allEvents[i].rsvpUsers).indexOf("\"" + username + "\"") == -1) { %>
-											<% if ((allEvents[i].rsvpUsers.length == 0) || (allEvents[i].rsvpLimit > allEvents[i].rsvpUsers.length)) { %>
-												<!-- Show RSVP button if user is not currently RSVP'd and if there is still space to RSVP  -->
-												<form action="/event/<%= allEvents[i]._id %>/rsvp" method="POST" style="display: inline-block">
-													<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/rsvp'"><i class="fa fa-calendar-check-o"></i> I'm Attending</button>
-												</form>
-											<% } %>
-										<% } else { %>
-											<!-- Show UnRSVP button if user is already RSVP'd to the event -->
-											<form action="/event/<%= allEvents[i]._id %>/unrsvp" method="POST" style="display: inline-block">
-												<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/unrsvp'"><i class="fa fa-calendar-times-o"></i> I'm Not Attending</button>
+								<% if (user != null && user.roles.type.user) {%>
+									<% if (JSON.stringify(allEvents[i].rsvpUsers).indexOf("\"" + username + "\"") == -1) { %>
+										<% if ((allEvents[i].rsvpUsers.length == 0) || (allEvents[i].rsvpLimit > allEvents[i].rsvpUsers.length)) { %>
+											<!-- Show RSVP button if user is not currently RSVP'd and if there is still space to RSVP  -->
+											<form action="/event/<%= allEvents[i]._id %>/rsvp" method="POST" style="display: inline-block">
+												<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/rsvp'"><i class="fa fa-calendar-check-o"></i> I'm Attending</button>
 											</form>
 										<% } %>
+									<% } else { %>
+										<!-- Show UnRSVP button if user is already RSVP'd to the event -->
+										<form class="form-horizontal" action="/event/<%=allEvents[i]._id%>/resume" method="POST" enctype="multipart/form-data">
+											<!-- Select Basic -->
+											<div class="form-group">
+												<div class="col-md-6">
+													<select id=<%= `resume-${allEvents[i]._id}` %> name="shareresume" class="form-control" onchange="onEventResumeChange(this)">
+														<option value="None">Do not share resume</option>
+														<option value="Profile">Share profile resume</option>
+														<option value="Custom">Share custom resume</option>
+													</select>
+												</div>
+											</div>
+
+											<!-- File Button -->
+											<div id="<%=`upload-${allEvents[i]._id}`%>" class="form-group" hidden>
+												<div class="col-md-6">
+													<label class="control-label">Upload custom resume</label>
+													<input id="resume" name="resume" class="input-file" type="file">
+													<span class="help-block">Currently uploaded: <%= (allEvents[i].resumes && allEvents[i].resumes.findIndex((resume) => user.username === resume.user) > -1 && allEvents[i].resumes[allEvents[i].resumes.findIndex((resume) => user.username === resume.user)].option === 'Custom') ? allEvents[i].resumes[allEvents[i].resumes.findIndex((resume) => user.username === resume.user)].eventResume.type.originalName : 'None' %></span>
+													<button name="submit" class="btn btn-primary btn-sm">Upload resume</button>
+												</div>
+
+											</div>
+										</form>
 
 
-										<!-- <button id=<%= "show-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>'"><i class="fa fa-eye"></i> Show Event</button> -->
+										<form action="/event/<%= allEvents[i]._id %>/unrsvp" method="POST" style="display: inline-block">
+											<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/unrsvp'"><i class="fa fa-calendar-times-o"></i> I'm Not Attending</button>
+										</form>
 									<% } %>
-									<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
-										<button id=<%= "edit-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/edit'"><i class="fa fa-edit"></i> Edit Event</button>
-										<button id=<%= "duplicate-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/duplicate'"><i class="fa fa-copy"></i> Duplicate Event</button>
-										<!-- <form action="/event/<%= allEvents[i]._id %>/delete" method="POST" display="none" style="display: inline-block"> -->
-											<button id=<%= "delete-" + allEvents[i]._id %> data-record-id="<%= allEvents[i]._id %>" data-record-title="<%= allEvents[i].name %>" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i> Delete Event</button>
-										<!-- </form> -->
-									<% } %>
 
-								</article>
 
-							<% } %>
+									<!-- <button id=<%= "show-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>'"><i class="fa fa-eye"></i> Show Event</button> -->
+								<% } %>
+								<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
+									<button id=<%= "edit-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/edit'"><i class="fa fa-edit"></i> Edit Event</button>
+									<button id=<%= "duplicate-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/duplicate'"><i class="fa fa-copy"></i> Duplicate Event</button>
+									<!-- <form action="/event/<%= allEvents[i]._id %>/delete" method="POST" display="none" style="display: inline-block"> -->
+										<button id=<%= "delete-" + allEvents[i]._id %> data-record-id="<%= allEvents[i]._id %>" data-record-title="<%= allEvents[i].name %>" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i> Delete Event</button>
+									<!-- </form> -->
+								<% } %>
+
+							</article>
+
+						<% } %>
 					</section>
 
 				</div><!-- Jumbotron -->
@@ -169,6 +193,44 @@
 			    $('.title', this).text(data.recordTitle);
 			    $('.btn-ok', this).data('recordId', data.recordId);
 			});
+
+			function onEventResumeChange(selectedObj) {
+				let eventId = selectedObj.id.substring(7);
+
+				if (selectedObj.value !== 'Custom') {
+					$(`#upload-${eventId}`).hide();
+					$.post(`/event/${eventId}/resume`, { action: selectedObj.value });
+				} else {
+					$(`#upload-${eventId}`).show();
+				}
+			}
+
+			function initializeEventSpecificResumes() {
+				<%
+					let resumeOptions = {};
+
+					for (let j = 0; j < allEvents.length; j++) {
+						let resumes = allEvents[j].resumes;
+
+						let k = resumes.findIndex((resume) => user.username === resume.user);
+
+						if (k > -1) {
+							resumeOptions[allEvents[j]._id] = resumes[k].option;
+						}
+					}
+				%>
+
+				let resumeOptions = JSON.parse('<%- JSON.stringify(resumeOptions); %>');
+
+				for (let id in resumeOptions) {
+					$(`#resume-${id}`).val(resumeOptions[id]);
+					if (resumeOptions[id] === 'Custom') {
+						$(`#upload-${id}`).show();
+					}
+				}
+			}
+
+			initializeEventSpecificResumes();
     </script>
 
 </body>

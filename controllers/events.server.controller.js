@@ -42,7 +42,11 @@ module.exports.update = function(req, res) {
 			console.log('POST updating event to: ' + updatedEvent);
 			req.flash("info", "Event has been updated.");
 
-			res.redirect(`/event/${req.params.id}/edit`);
+			if (req.body.redirect) {
+				res.redirect(req.body.redirect);
+			} else {
+				res.redirect(`/event/${req.params.id}/edit`);
+			}
 		}, function(err) {
 			res.status(400).json(err);
 		});

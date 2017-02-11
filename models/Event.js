@@ -80,6 +80,25 @@ let EventSchema = new GetterSchema({
 	tags: [{
 		type: String,
 		trim: true
+	}],
+	resumes: [{
+		user: {
+			type: String,
+			ref: 'User'
+		},
+		option: {
+			type: String
+		},
+		eventResume: {
+			type: {
+				filepath: {
+					type: String
+				},
+				originalName: {
+					type: String
+				}
+			}
+		}
 	}]
 });
 

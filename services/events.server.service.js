@@ -44,6 +44,10 @@ module.exports = function() {
 			mergedEvent.markModified('major');
 			mergedEvent.major = newEvent.major;
 		}
+		if (newEvent.resumes) {
+			mergedEvent.markModified('resumes');
+			mergedEvent.resumes = newEvent.resumes;
+		}
 
 		return mergedEvent.save();
 	}
