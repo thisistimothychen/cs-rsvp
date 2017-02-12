@@ -57,13 +57,22 @@
 
 								</p>
 
-								<% if (user != null && user.roles.type.user) {%>
+
+
+
+                                <% if (user != null && user.roles.type.user) {%>
 									<% if (JSON.stringify(allEvents[i].rsvpUsers).indexOf("\"" + username + "\"") == -1) { %>
 										<% if ((allEvents[i].rsvpUsers.length == 0) || (allEvents[i].rsvpLimit > allEvents[i].rsvpUsers.length)) { %>
+											<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
+												<button style="display: block" class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/download_resume_book'"><i class="fa fa-book"></i> Download resume book </button>
+											<% } %>
+
 											<!-- Show RSVP button if user is not currently RSVP'd and if there is still space to RSVP  -->
 											<form action="/event/<%= allEvents[i]._id %>/rsvp" method="POST" style="display: inline-block">
 												<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/rsvp'"><i class="fa fa-calendar-check-o"></i> I'm Attending</button>
 											</form>
+
+
 										<% } %>
 									<% } else { %>
 										<!-- Show UnRSVP button if user is already RSVP'd to the event -->
@@ -91,10 +100,16 @@
 											</div>
 										</form>
 
+										<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
+											<button style="display: block" class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/download_resume_book'"><i class="fa fa-book"></i> Download resume book </button>
+										<% } %>
+
 
 										<form action="/event/<%= allEvents[i]._id %>/unrsvp" method="POST" style="display: inline-block">
 											<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/unrsvp'"><i class="fa fa-calendar-times-o"></i> I'm Not Attending</button>
 										</form>
+
+
 									<% } %>
 
 

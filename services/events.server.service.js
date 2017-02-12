@@ -4,7 +4,10 @@ let
 	_ = require('lodash'),
 	path = require('path'),
 	q = require('q'),
+	fs = require('fs-extra'),
+	archiver = require('archiver'),
 
+	User = require(path.resolve('./models/User')),
 	Event = require(path.resolve('./models/Event'));
 
 module.exports = function() {
@@ -95,12 +98,75 @@ module.exports = function() {
 		});
 	}
 
+	function getResumeBook(id, res) {
+		return Event.findOne({_id: id}, { resumes: 1 }).exec()
+			.then((result) => {
+				if (result == null) {
+					res.status(500).json('Event id is invalid!');
+					return;
+				}
+
+				let baseDirectory = `${path.join(__dirname, '..', 'uploads', id)}-resume-book/`;
+
+				fs.removeSync(baseDirectory);
+				fs.ensureDirSync(baseDirectory);
+
+				let outputFileName = `${path.join(__dirname, '..', 'uploads')}/${id}.zip`;
+				let output = fs.createWriteStream(outputFileName);
+
+				let archive = archiver('zip', { store: true });
+
+				output.on('open', () => {
+					archive.pipe(output);
+
+					let promises = [];
+
+					for (let i = 0; i < result.resumes.length; i++) {
+						let resume = result.resumes[i];
+
+						if (resume.option === 'Profile') {
+							promises.push(
+								User.findOne({username: resume.user}).exec()
+									.then((user) => {
+										if (user != null && user.resume != null && user.resume.type != null) {
+											fs.copySync(user.resume.type.filepath, `${baseDirectory}/${resume.user}`);
+										}
+									}, (err) => {
+										console.log(err);
+									})
+							);
+						}
+						else if (resume.option === 'Custom') {
+							fs.copySync(resume.eventResume.type.filepath, `${baseDirectory}/${resume.user}`);
+						}
+					}
+
+					q.allSettled(promises)
+						.then(() => {
+							archive.directory(`uploads/${id}-resume-book/`, `${id}-resume-book`);
+							archive.finalize();
+						}, (err) => {
+							console.log(err);
+						});
+				});
+
+				output.on('close', function() {
+					res.download(outputFileName, outputFileName);
+				});
+
+				output.on('error', function(err) {
+					res.status(500).json(err);
+				});
+			});
+	}
+
 	return {
 		createEvent: createEvent,
 		updateEvent: updateEvent,
 		deleteEvent: deleteEvent,
 		searchEvents: searchEvents,
 		addUserRSVPToEvent: addUserRSVPToEvent,
-		removeUserRSVPToEvent: removeUserRSVPToEvent
+		removeUserRSVPToEvent: removeUserRSVPToEvent,
+		getResumeBook: getResumeBook
 	};
 };

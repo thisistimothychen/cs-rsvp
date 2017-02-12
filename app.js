@@ -271,7 +271,7 @@ let checkPermissionsWithCallback = function(req, res, callback, roles) {
 		  }
 
 		  // No permission to view pageToRender
-		  req.flash('danger', 'Sorry, you have insufficient user privileges to access the ' + pageToRender.substring(0, pageToRender.length - 4) + ' page.');
+		  req.flash('danger', 'Sorry, you have insufficient user privileges to access this page.');
 		  res.redirect('/');
 		}
 	  });
@@ -500,6 +500,12 @@ app.post('/event/:id/resume', upload.single('resume'), function(req, res) {
 	    }
       });
   }, ['User', 'Admin', 'Superuser']);
+});
+
+app.get('/event/:id/download_resume_book', function(req, res) {
+	checkPermissionsWithCallback(req, res, function(params) {
+		eventsController.getResumeBook(req, res);
+	}, ['Admin', 'Superuser']);
 });
 
 

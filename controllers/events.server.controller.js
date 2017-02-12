@@ -2,6 +2,8 @@
 
 let path = require('path'),
 	q = require('q'),
+	mime = require('mine'),
+	fs = require('fs'),
 
 	eventsService = require(path.resolve('./services/events.server.service.js'))(),
 	Event = require(path.resolve('./models/Event'));
@@ -107,4 +109,8 @@ module.exports.search = function(req, res) {
 		}, function(err) {
 			res.status(400).json(err);
 		});
+};
+
+module.exports.getResumeBook = function(req, res) {
+	eventsService.getResumeBook(req.params.id, res);
 };
