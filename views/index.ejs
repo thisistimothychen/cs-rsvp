@@ -84,7 +84,7 @@
 												<div class="col-md-6">
 													<label class="control-label">Upload custom resume</label>
 													<input id="resume" name="resume" class="input-file" type="file">
-													<span class="help-block">Currently uploaded: <%= (allEvents[i].resumes && allEvents[i].resumes.findIndex((resume) => user.username === resume.user) > -1 && allEvents[i].resumes[allEvents[i].resumes.findIndex((resume) => user.username === resume.user)].option === 'Custom') ? allEvents[i].resumes[allEvents[i].resumes.findIndex((resume) => user.username === resume.user)].eventResume.type.originalName : 'None' %></span>
+													<span id=<%= `currently-uploaded-${allEvents[i]._id}` %> class="help-block">Currently uploaded: <%= (allEvents[i].resumes && allEvents[i].resumes.findIndex((resume) => user.username === resume.user) > -1 && allEvents[i].resumes[allEvents[i].resumes.findIndex((resume) => user.username === resume.user)].option === 'Custom') ? allEvents[i].resumes[allEvents[i].resumes.findIndex((resume) => user.username === resume.user)].eventResume.type.originalName : 'None' %></span>
 													<button name="submit" class="btn btn-primary btn-sm">Upload resume</button>
 												</div>
 
@@ -199,6 +199,7 @@
 
 				if (selectedObj.value !== 'Custom') {
 					$(`#upload-${eventId}`).hide();
+					$(`#currently-uploaded-${eventId}`).text('Currently uploaded: None');
 					$.post(`/event/${eventId}/resume`, { action: selectedObj.value });
 				} else {
 					$(`#upload-${eventId}`).show();
