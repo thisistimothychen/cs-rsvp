@@ -63,13 +63,10 @@
                                 <% if (user != null && user.roles.type.user) {%>
 									<% if (JSON.stringify(allEvents[i].rsvpUsers).indexOf("\"" + username + "\"") == -1) { %>
 										<% if ((allEvents[i].rsvpUsers.length == 0) || (allEvents[i].rsvpLimit > allEvents[i].rsvpUsers.length)) { %>
-											<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
-												<button style="display: block" class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/download_resume_book'"><i class="fa fa-book"></i> Download resume book </button>
-											<% } %>
 
 											<!-- Show RSVP button if user is not currently RSVP'd and if there is still space to RSVP  -->
 											<form action="/event/<%= allEvents[i]._id %>/rsvp" method="POST" style="display: inline-block">
-												<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/rsvp'"><i class="fa fa-calendar-check-o"></i> I'm Attending</button>
+												<button id=<%= `rsvp-${allEvents[i]._id}` %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/rsvp'"><i class="fa fa-calendar-check-o"></i> I'm Attending</button>
 											</form>
 
 
@@ -100,27 +97,25 @@
 											</div>
 										</form>
 
-										<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
-											<button style="display: block" class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/download_resume_book'"><i class="fa fa-book"></i> Download resume book </button>
-										<% } %>
+
 
 
 										<form action="/event/<%= allEvents[i]._id %>/unrsvp" method="POST" style="display: inline-block">
-											<button id=<%= "rsvp-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/unrsvp'"><i class="fa fa-calendar-times-o"></i> I'm Not Attending</button>
+											<button id=<%= `rsvp-${allEvents[i]._id}` %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/unrsvp'"><i class="fa fa-calendar-times-o"></i> I'm Not Attending</button>
 										</form>
 
 
 									<% } %>
 
 
-									<!-- <button id=<%= "show-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>'"><i class="fa fa-eye"></i> Show Event</button> -->
+									 <button id=<%= `show-${allEvents[i]._id}` %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>'"><i class="fa fa-info-circle"></i> Event Details</button>
 								<% } %>
 								<% if (user != null && (user.roles.type.admin || user.roles.type.superuser)) { %>
-									<button id=<%= "edit-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/edit'"><i class="fa fa-edit"></i> Edit Event</button>
-									<button id=<%= "duplicate-" + allEvents[i]._id %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/duplicate'"><i class="fa fa-copy"></i> Duplicate Event</button>
-									<!-- <form action="/event/<%= allEvents[i]._id %>/delete" method="POST" display="none" style="display: inline-block"> -->
-										<button id=<%= "delete-" + allEvents[i]._id %> data-record-id="<%= allEvents[i]._id %>" data-record-title="<%= allEvents[i].name %>" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i> Delete Event</button>
-									<!-- </form> -->
+									<br>
+									<button class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/download_resume_book'"><i class="fa fa-book"></i> Download resume book </button>
+									<button id=<%= `edit-${allEvents[i]._id}` %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/edit'"><i class="fa fa-edit"></i> Edit Event</button>
+									<button id=<%= `duplicate-${allEvents[i]._id}` %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/duplicate'"><i class="fa fa-copy"></i> Duplicate Event</button>
+									<button id=<%= `delete-${allEvents[i]._id}` %> data-record-id="<%= allEvents[i]._id %>" data-record-title="<%= allEvents[i].name %>" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i> Delete Event</button>
 								<% } %>
 
 							</article>
