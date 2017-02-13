@@ -62,13 +62,12 @@
 
                                 <% if (user != null && user.roles.type.user) {%>
 									<% if (JSON.stringify(allEvents[i].rsvpUsers).indexOf("\"" + username + "\"") == -1) { %>
-										<% if ((allEvents[i].rsvpUsers.length == 0) || (allEvents[i].rsvpLimit > allEvents[i].rsvpUsers.length)) { %>
+										<% if ((allEvents[i].rsvpUsers.length == 0) || (allEvents[i].rsvpLimit != 0) || (allEvents[i].rsvpLimit > allEvents[i].rsvpUsers.length)) { %>
 
 											<!-- Show RSVP button if user is not currently RSVP'd and if there is still space to RSVP  -->
 											<form action="/event/<%= allEvents[i]._id %>/rsvp" method="POST" style="display: inline-block">
 												<button id=<%= `rsvp-${allEvents[i]._id}` %> class="btn btn-default" onclick="location.href='/event/<%= allEvents[i]._id %>/rsvp'"><i class="fa fa-calendar-check-o"></i> I'm Attending</button>
 											</form>
-
 
 										<% } %>
 									<% } else { %>
@@ -204,42 +203,44 @@
 			    $('.btn-ok', this).data('recordId', data.recordId);
 			});
 
-			function onEventResumeChange(selectedObj) {
-				let eventId = selectedObj.id.substring(7);
+			<% if (user) { %>
+				function onEventResumeChange(selectedObj) {
+					let eventId = selectedObj.id.substring(7);
 
-				if (selectedObj.value !== 'Custom') {
-					$(`#upload-${eventId}`).hide();
-					$(`#currently-uploaded-${eventId}`).text('Currently uploaded: None');
-					$.post(`/event/${eventId}/resume`, { action: selectedObj.value });
-				} else {
-					$(`#upload-${eventId}`).show();
+					if (selectedObj.value !== 'Custom') {
+						$(`#upload-${eventId}`).hide();
+						$(`#currently-uploaded-${eventId}`).text('Currently uploaded: None');
+						$.post(`/event/${eventId}/resume`, { action: selectedObj.value });
+					} else {
+						$(`#upload-${eventId}`).show();
+					}
 				}
-			}
 
-			function initializeEventSpecificResumes() {
-				<%
-					let resumeOptions = {};
+				function initializeEventSpecificResumes() {
+					<%
+						let resumeOptions = {};
 
-					for (let j = 0; j < allEvents.length; j++) {
-						let resumes = allEvents[j].resumes;
+						for (let j = 0; j < allEvents.length; j++) {
+							let resumes = allEvents[j].resumes;
 
-						let k = resumes.findIndex((resume) => user.username === resume.user);
+							let k = resumes.findIndex((resume) => user.username === resume.user);
 
-						if (k > -1) {
-							resumeOptions[allEvents[j]._id] = resumes[k].option;
+							if (k > -1) {
+								resumeOptions[allEvents[j]._id] = resumes[k].option;
+							}
+						}
+					%>
+
+					let resumeOptions = JSON.parse('<%- JSON.stringify(resumeOptions); %>');
+
+					for (let id in resumeOptions) {
+						$(`#resume-${id}`).val(resumeOptions[id]);
+						if (resumeOptions[id] === 'Custom') {
+							$(`#upload-${id}`).show();
 						}
 					}
-				%>
-
-				let resumeOptions = JSON.parse('<%- JSON.stringify(resumeOptions); %>');
-
-				for (let id in resumeOptions) {
-					$(`#resume-${id}`).val(resumeOptions[id]);
-					if (resumeOptions[id] === 'Custom') {
-						$(`#upload-${id}`).show();
-					}
 				}
-			}
+			<% } %>
 
 			initializeEventSpecificResumes();
     </script>
